@@ -14,6 +14,3 @@ Explore, manage, and extract SQLite files efficiently with SQLiteDiskExplorer. Y
 
 ## Contributing
 Contributions are welcome! If you find a bug or have suggestions for improvements, feel free to open an issue.
-
-## Special Thanks 
-- A special expression of gratitude to NogginBops for their remarkable [Dear ImGui/OpenTK template](https://github.com/NogginBops/ImGui.NET_OpenTK_Sample).

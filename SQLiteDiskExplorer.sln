@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.33711.374
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SQLiteDiskExplorer", "SQLiteDiskExplorer\SQLiteDiskExplorer.csproj", "{5B0B9292-82E5-42FA-9C1B-EBC1096080E1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQLiteDiskExplorer", "SQLiteDiskExplorer\SQLiteDiskExplorer.csproj", "{DD6F019B-38E7-4D76-A1D1-C2C1870F2AB1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5B0B9292-82E5-42FA-9C1B-EBC1096080E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5B0B9292-82E5-42FA-9C1B-EBC1096080E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5B0B9292-82E5-42FA-9C1B-EBC1096080E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5B0B9292-82E5-42FA-9C1B-EBC1096080E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD6F019B-38E7-4D76-A1D1-C2C1870F2AB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD6F019B-38E7-4D76-A1D1-C2C1870F2AB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD6F019B-38E7-4D76-A1D1-C2C1870F2AB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD6F019B-38E7-4D76-A1D1-C2C1870F2AB1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {81B8CF7A-7C8C-46CF-A698-DE0A51B5AA13}
+		SolutionGuid = {1E4C6F58-0F01-4F64-B8C6-0855B19CC228}
 	EndGlobalSection
 EndGlobal
