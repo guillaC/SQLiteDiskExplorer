@@ -1,10 +1,10 @@
-﻿using SQLiteDiskExplorer.UI;
+﻿using SQLiteDiskExplorer;
 
 internal class Program
 {
     private static void Main(string[] args)
     {
-        MainUI mainForm = new MainUI();
+        RenderControllerClass mainForm = new RenderControllerClass();
         mainForm.Start().Wait();
     }
 }

@@ -1,44 +1,93 @@
-﻿using ImGuiNET;
-using ClickableTransparentOverlay;
+﻿using ClickableTransparentOverlay;
+using ImGuiNET;
+using SixLabors.ImageSharp.PixelFormats;
 using SQLiteDiskExplorer.Utils;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection.Metadata;
+using System.Text;
+using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace SQLiteDiskExplorer.UI
 {
-    public class MainUI : Overlay
+    public class MainUI
     {
+        const string IMGP = ".\\Res\\SQLiteDiskExplorerIcon.png";
+
+        RenderControllerClass RenderControllerClass;
+
         bool firstLoad = true;
 
-        List<DriveInfo> drives = new();
         bool[]? selectedDrive;
+        List<DriveInfo> drives = new();
 
-        protected override void Render()
+        bool srbg = true;
+        IntPtr imageHandle;
+        uint imageHeight, imageWidth;
+
+        public MainUI(RenderControllerClass rcClass)
         {
-            ImGui.Begin("Main Form", ImGuiWindowFlags.NoCollapse);
+            RenderControllerClass = rcClass;
+        }
+
+        public void Show()
+        {
+            ImGui.Begin("Main Form", ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.MenuBar);
 
             if (firstLoad)
             {
-                ImGui.StyleColorsDark();
-                ImGui.SetWindowSize(new System.Numerics.Vector2(700, 500));
+                ImGui.StyleColorsClassic();
+                RenderControllerClass.AddOrGetImagePointer(IMGP, srbg, out imageHandle, out imageWidth, out imageHeight);
                 InitializeSelectedDriveList();
                 firstLoad = !firstLoad;
             }
-            
+
+            ShowMenuBar();
             ShowHeader();
             ShowDrives();
             ShowActions();
+
             ImGui.End();
+        }
+
+        private void ShowMenuBar()
+        {
+            ImGui.BeginMenuBar();
+
+            ImGui.PushStyleColor(ImGuiCol.Button, new System.Numerics.Vector4());
+
+            if (ImGui.MenuItem("About"))
+            {
+                ShowAboutForm();
+            }
+
+            ImGui.Separator();
+            if (ImGui.MenuItem("Exit", "Alt+F4"))
+            {
+                Environment.Exit(0);
+            }
+
+            ImGui.PopStyleColor();
+            ImGui.EndMenuBar();
         }
 
         private void ShowHeader()
         {
-            ImGui.SeparatorText("Disclaimer");
-            ImGui.Text("I take no responsibility for how this program is used.");
+
+            ImGui.BeginChild("ChildImg", new System.Numerics.Vector2(100, 100));
+            ImGui.Image(imageHandle, new System.Numerics.Vector2(100, 100));
+            ImGui.EndChild();
+            ImGui.SameLine();
+            ImGui.BeginChild("ChildGuide", new System.Numerics.Vector2(620, 100));
             ImGui.SeparatorText("User Guide");
             ImGui.Text("To begin, select one or more disks for analysis.\n" +
                    "You can browse SQLite files within this tool or perform a global or partial export.\n" +
                    "The exported files will be saved in a directory named based on the current date,\n" +
                    "which is located in the same directory as the application.\n" +
                    "For complete results, run the application as an admin when scanning the system disk.");
+            ImGui.EndChild();
         }
         private void ShowDrives()
         {
@@ -80,18 +129,17 @@ namespace SQLiteDiskExplorer.UI
         {
             if (ImGui.Button("Process"))
             {
-
+                List<DriveInfo> selectedDrives = drives
+    .Select((drive, index) => new { Drive = drive, Index = index })
+    .Where(item => selectedDrive[item.Index])
+    .Select(item => item.Drive)
+    .ToList();
+                RenderControllerClass.scanForm = new ScanUI(selectedDrives);
             }
-            ImGui.SameLine();
-            if (ImGui.Button("Properties"))
-            {
-
-            }
-            ImGui.SameLine();
-            if (ImGui.Button("Exit"))
-            {
-                Console.WriteLine("Exit");
-            }
+        }
+        private void ShowAboutForm()
+        {
+            RenderControllerClass.aboutForm = new AboutUI();
         }
 
         private void InitializeSelectedDriveList()
