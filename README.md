@@ -1,4 +1,6 @@
 # SQLiteDiskExplorer
+<img align="left" src="https://raw.githubusercontent.com/guillaC/SQLiteDiskExplorer/main/SQLiteDiskExplorer/Res/SQLiteDiskExplorerIcon.png?token=GHSAT0AAAAAACDLDVWCXEXV2S5STEUBY2GSZHCQS6Q" width="100" height="100">
+
 SQLiteDiskExplorer is a tool designed to help you efficiently manage *your* SQLite files. Whether you're looking to explore, catalog, or batch extract SQLite files from disks and removable media, this tool provides a user-friendly solution for your needs.
 
 Explore, manage, and extract SQLite files efficiently with SQLiteDiskExplorer. Your valuable data is just a scan away!
