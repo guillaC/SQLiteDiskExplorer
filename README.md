@@ -19,8 +19,7 @@ Explore, manage, and extract SQLite files efficiently with SQLiteDiskExplorer. Y
 - **Data Visualization:** View the structure and content of your SQLite databases.
 
 ## Screenshots
-![image](https://github.com/guillaC/SQLiteDiskExplorer/assets/6315083/c5495974-dd4e-4138-a0ce-db4101257738)
-
+![image](https://github.com/guillaC/SQLiteDiskExplorer/assets/6315083/78b68650-ef33-4d36-b360-4428f27ec33f)
 
 ## Contributing
 Contributions are welcome! If you find a bug or have suggestions for improvements, feel free to open an issue.
