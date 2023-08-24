@@ -44,7 +44,7 @@ namespace SQLiteDiskExplorer.Core
                
                 return 0.0f;
 
-            return (float)totalProcessedFiles / totalNbFiles;
+            return (float)Math.Round((double)totalProcessedFiles / totalNbFiles, 2);
         }
 
         private void ScanFiles()
@@ -56,6 +56,7 @@ namespace SQLiteDiskExplorer.Core
 
             Parallel.ForEach(paths, file =>
             {
+                totalProcessedFiles++;
                 if (IsSQLiteFile(file))
                 {
                     lock (lockObject)
@@ -64,7 +65,6 @@ namespace SQLiteDiskExplorer.Core
                         Console.WriteLine( $"{totalNbFiles} / {totalProcessedFiles}");
                     }
                 }
-                totalProcessedFiles++;
             });
 
             WorkerState = State.Done;

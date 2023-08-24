@@ -1,12 +1,6 @@
-﻿using ClickableTransparentOverlay;
-using ImGuiNET;
+﻿using ImGuiNET;
 using SQLiteDiskExplorer.Core;
 using SQLiteDiskExplorer.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SQLiteDiskExplorer.UI
 {
@@ -34,12 +28,10 @@ namespace SQLiteDiskExplorer.UI
                 firstLoad = !firstLoad;
             }
 
-            
             ShowProgress();
             ShowAnalysis();
             ImGui.End();
         }
-
 
         public void ShowProgress()
         {
@@ -80,15 +72,13 @@ namespace SQLiteDiskExplorer.UI
                             ImGui.TableHeadersRow();
                             foreach(FileInfo file in info.Value)
                             {
-                                ImGui.TableNextRow();
                                 ImGui.TableNextColumn();
-
                                 ImGui.Text(file.FullName);
                                 ImGui.TableNextColumn();
                                 ImGui.Text(file.CreationTime.ToString());
                                 ImGui.TableNextColumn();
                                 ImGui.Text(Drive.FormatSize(file.Length));
-                                ImGui.TableNextColumn();
+                                ImGui.TableNextRow();
                             }
                             ImGui.EndTable();
                             ImGui.EndChild();
@@ -96,8 +86,6 @@ namespace SQLiteDiskExplorer.UI
                         ImGui.EndTabItem();
                     }
                 }
-
-
             }
         }
     }
