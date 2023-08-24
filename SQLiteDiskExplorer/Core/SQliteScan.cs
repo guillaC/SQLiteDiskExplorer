@@ -5,23 +5,29 @@ namespace SQLiteDiskExplorer.Core
 {
     public class SQliteScan
     {
+
+        public enum State { Waiting, Error, Enumerating, Scanning, Done};
+        public State WorkerState = State.Waiting;
+
         EnumerationOptions options = new EnumerationOptions()
         {
             IgnoreInaccessible = true,
             RecurseSubdirectories = true,
         };
 
-        IEnumerable<string> paths = Enumerable.Empty<string>();
-        List<FileInfo> result = new List<FileInfo>();
+        private List<string> paths = new();
+        private List<FileInfo> result = new();
         private object lockObject = new object();
 
-        private int remainingThreads;
-        private readonly ManualResetEventSlim resetEvent = new ManualResetEventSlim(false);
+        private int totalNbFiles = 0;
+        private int totalProcessedFiles = 0;
 
         public SQliteScan(DriveInfo drive)
         {
-            remainingThreads = paths.Count();
-            Task.Run(() => Enumerate(drive));
+            Task.Run(() =>
+            {
+                EnumerateAndScanFiles(drive);
+            });
         }
 
         public List<FileInfo> returnResult()
@@ -34,61 +40,59 @@ namespace SQLiteDiskExplorer.Core
             return copy;
         }
 
-        public void Scan()
+        public float GetScanProgress()
         {
-            int maxThreads = Environment.ProcessorCount; // Number of threads
+            if (totalNbFiles == 0)
+                return 0.0f;
 
-            foreach (string file in paths)
-            {
-                ThreadPool.QueueUserWorkItem(state =>
-                {
-                    if (IsSQLiteFile(file))
-                    {
-                        lock (lockObject)
-                        {
-                            result.Add(new FileInfo(file));
-                        }
-                    }
-
-                    if (Interlocked.Decrement(ref remainingThreads) == 0)
-                    {
-                        resetEvent.Set();
-                    }
-                });
-            }
-
-            resetEvent.Wait();
+            return (float)totalProcessedFiles / totalNbFiles;
         }
 
-        private void Enumerate(DriveInfo drive)
+        private void ScanFiles()
         {
-            Console.WriteLine("Enumerating..");
+            Console.WriteLine("Scanning...");
+            WorkerState = State.Scanning;
 
-            try
+            Console.WriteLine($"{paths.Count()} files to scan");
+
+            Parallel.ForEach(paths, file =>
             {
-                var paths = Directory.EnumerateFiles(drive.Name, "*", options);
-
-                int nbF = 0;
-                foreach (string path in paths)// Only For Testing
+                if (IsSQLiteFile(file))
                 {
                     lock (lockObject)
                     {
-                        result.Add(new FileInfo(path));
+                        result.Add(new FileInfo(file));
+                        Console.WriteLine( $"{totalNbFiles} / {totalProcessedFiles}");
                     }
-
-                    nbF++;
-                    if (nbF == 100) return;
-
                 }
-                Console.WriteLine("Enumerate OK");
+                totalProcessedFiles++;
+            });
+
+            WorkerState = State.Done;
+            Console.WriteLine("All files processed.");
+        }
+
+        private void EnumerateAndScanFiles(DriveInfo drive)
+        {
+            Thread.Sleep(2000);
+            Console.WriteLine("Enumerating...");
+            WorkerState = State.Enumerating;
+            try
+            {
+                paths = Directory.EnumerateFiles(drive.Name, "*", options).ToList();
+                Console.WriteLine($"Done. {paths.Count()}");
+                totalNbFiles = paths.Count();
+                ScanFiles();
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error enumerating files: {ex.Message}");
+                WorkerState = State.Error;
             }
+
         }
 
-        private bool IsSQLiteFile(string file)
+        private bool IsSQLiteFile(string file) //https://www.sqlite.org/fileformat.html
         {
             byte[] header = new byte[16];
 
@@ -99,8 +103,10 @@ namespace SQLiteDiskExplorer.Core
                     stream.Read(header, 0, 16);
                 }
             }
-            catch
+            catch(Exception ex)
             {
+                Console.WriteLine(file);
+                Console.WriteLine(ex.Message);
                 return false;
             }
 

@@ -39,7 +39,7 @@ namespace SQLiteDiskExplorer.UI
 
             if (firstLoad)
             {
-                ImGui.StyleColorsClassic();
+                ImGui.StyleColorsDark();
                 RenderControllerClass.AddOrGetImagePointer(IMGP, srbg, out imageHandle, out imageWidth, out imageHeight);
                 InitializeSelectedDriveList();
                 firstLoad = !firstLoad;

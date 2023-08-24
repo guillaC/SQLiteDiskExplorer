@@ -37,9 +37,8 @@ namespace SQLiteDiskExplorer.UI
                 firstLoad = !firstLoad;
             }
 
-            ImGui.SeparatorText("Progress");
+            
             ShowProgress();
-            ImGui.SeparatorText("Analysis");
             ShowAnalysis();
             ImGui.End();
         }
@@ -47,7 +46,11 @@ namespace SQLiteDiskExplorer.UI
 
         public void ShowProgress()
         {
-            ImGui.ProgressBar(progress, new System.Numerics.Vector2(450,20), progressStr);
+            ImGui.SeparatorText("Progress");
+            foreach (var worker in Workers)
+            {
+                ImGui.ProgressBar(worker.Value.GetScanProgress(), new System.Numerics.Vector2(450, 20), $"{worker.Value.WorkerState}");
+            }
         }
 
         public void LoadResult() // use timer .. 
@@ -61,7 +64,7 @@ namespace SQLiteDiskExplorer.UI
         public void ShowAnalysis()
         {
             LoadResult();
-
+            ImGui.SeparatorText("Analysis");
             if (ImGui.BeginTabBar("ControlTabs", ImGuiTabBarFlags.None))
             {
                 foreach (KeyValuePair<DriveInfo, List<FileInfo>> info in DrivePathsMap)
