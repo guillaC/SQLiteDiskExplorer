@@ -1,0 +1,8 @@
+﻿{
+  "IgnoreInaccessible": true,
+  "RecurseSubdirectories": true,
+  "CheckPathKeywordPresence": true,
+  "CheckColumnKeywordPresence": true,
+  "CopyToTempIfOpnInAnotherProcess": true,
+  "ImportantKeywords": [ "TOR", "Test" ]
+}

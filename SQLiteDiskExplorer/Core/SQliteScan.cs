@@ -5,7 +5,6 @@ namespace SQLiteDiskExplorer.Core
 {
     public class SQliteScan
     {
-
         public enum State { Waiting, Error, Enumerating, Scanning, Done};
         public State WorkerState = State.Waiting;
 
@@ -19,8 +18,7 @@ namespace SQLiteDiskExplorer.Core
         private List<FileInfo> result = new();
         private object lockObject = new object();
 
-        private int totalNbFiles = 0;
-        private int totalProcessedFiles = 0;
+        private int totalNbFiles, totalProcessedFiles = 0;
 
         public SQliteScan(DriveInfo drive)
         {
@@ -43,6 +41,7 @@ namespace SQLiteDiskExplorer.Core
         public float GetScanProgress()
         {
             if (totalNbFiles == 0)
+               
                 return 0.0f;
 
             return (float)totalProcessedFiles / totalNbFiles;

@@ -17,9 +17,6 @@ namespace SQLiteDiskExplorer.UI
         Dictionary<DriveInfo, List<FileInfo>> DrivePathsMap = new();
         Dictionary<DriveInfo, SQliteScan> Workers = new();
 
-        float progress = 0.0f;
-        string progressStr = "c'est en cours le zin";
-
         public ScanUI(List<DriveInfo> pSelectedDrive)
         {
             foreach (var drive in pSelectedDrive)
@@ -77,9 +74,9 @@ namespace SQLiteDiskExplorer.UI
                         if (ImGui.BeginChild($"Result {drive.Name}", new System.Numerics.Vector2(1200, 650)))
                         {
                             ImGui.BeginTable("Files", 3, ImGuiTableFlags.Resizable | ImGuiTableFlags.NoSavedSettings | ImGuiTableFlags.Borders);
-                            ImGui.TableSetupColumn("Name");
-                            ImGui.TableSetupColumn("Date",ImGuiTableColumnFlags.WidthFixed);
-                            ImGui.TableSetupColumn("Size",ImGuiTableColumnFlags.WidthFixed);
+                            ImGui.TableSetupColumn("Name", ImGuiTableColumnFlags.NoResize, 0.78f);
+                            ImGui.TableSetupColumn("Date",ImGuiTableColumnFlags.NoResize, 0.15f);
+                            ImGui.TableSetupColumn("Size",ImGuiTableColumnFlags.NoResize,0.07f);
                             ImGui.TableHeadersRow();
                             foreach(FileInfo file in info.Value)
                             {

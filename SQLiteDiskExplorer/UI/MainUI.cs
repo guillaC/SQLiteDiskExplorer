@@ -59,6 +59,12 @@ namespace SQLiteDiskExplorer.UI
 
             ImGui.PushStyleColor(ImGuiCol.Button, new System.Numerics.Vector4());
 
+
+            if (ImGui.MenuItem("Configuration"))
+            {
+                ShowConfigForm();
+            }
+
             if (ImGui.MenuItem("About"))
             {
                 ShowAboutForm();
@@ -77,11 +83,11 @@ namespace SQLiteDiskExplorer.UI
         private void ShowHeader()
         {
 
-            ImGui.BeginChild("ChildImg", new System.Numerics.Vector2(100, 100));
-            ImGui.Image(imageHandle, new System.Numerics.Vector2(100, 100));
+            ImGui.BeginChild("ChildImg", new Vector2(100, 100));
+            ImGui.Image(imageHandle, new Vector2(100, 100));
             ImGui.EndChild();
             ImGui.SameLine();
-            ImGui.BeginChild("ChildGuide", new System.Numerics.Vector2(620, 100));
+            ImGui.BeginChild("ChildGuide", new Vector2(620, 100));
             ImGui.SeparatorText("User Guide");
             ImGui.Text("To begin, select one or more disks for analysis.\n" +
                    "You can browse SQLite files within this tool or perform a global or partial export.\n" +
@@ -128,8 +134,6 @@ namespace SQLiteDiskExplorer.UI
 
         private void ShowActions()
         {
-
-
             if (ImGui.Button("Process"))
             {
                 List<DriveInfo> selectedDrives = drives
@@ -143,6 +147,11 @@ namespace SQLiteDiskExplorer.UI
         private void ShowAboutForm()
         {
             RenderControllerClass.aboutForm = new AboutUI();
+        }
+
+        private void ShowConfigForm()
+        {
+            RenderControllerClass.configForm = new ConfigurationUI();
         }
 
         private void InitializeSelectedDriveList()

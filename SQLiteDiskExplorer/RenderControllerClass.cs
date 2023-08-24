@@ -10,6 +10,7 @@ namespace SQLiteDiskExplorer
         public AboutUI aboutForm;
         public MainUI mainForm;
         public ScanUI scanForm;
+        public ConfigurationUI configForm;
 
         protected override void Render() // loop
         {
@@ -24,6 +25,7 @@ namespace SQLiteDiskExplorer
 
             if (aboutForm != null) aboutForm.Show();
             if (scanForm != null) scanForm.Show();
+            if (configForm != null) configForm.Show();
         }
     }
 }
