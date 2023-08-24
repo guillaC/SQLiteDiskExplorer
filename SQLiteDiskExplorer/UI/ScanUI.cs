@@ -13,6 +13,7 @@ namespace SQLiteDiskExplorer.UI
     public class ScanUI
     {
         bool firstLoad = true;
+
         Dictionary<DriveInfo, List<FileInfo>> DrivePathsMap = new();
         Dictionary<DriveInfo, SQliteScan> Workers = new();
 
@@ -25,30 +26,22 @@ namespace SQLiteDiskExplorer.UI
             {
                 DrivePathsMap.Add(drive, new List<FileInfo>());
                 Workers.Add(drive, new SQliteScan(drive));
-
-                // start scan
             }
         }
 
         public void Show()
         {
             ImGui.Begin("Analysis", ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.AlwaysAutoResize);
-
-
             if (firstLoad)
             {
                 firstLoad = !firstLoad;
             }
-
-            LoadResult();
 
             ImGui.SeparatorText("Progress");
             ShowProgress();
             ImGui.SeparatorText("Analysis");
             ShowAnalysis();
             ImGui.End();
-
-            
         }
 
 
@@ -57,7 +50,7 @@ namespace SQLiteDiskExplorer.UI
             ImGui.ProgressBar(progress, new System.Numerics.Vector2(450,20), progressStr);
         }
 
-        public void LoadResult()
+        public void LoadResult() // use timer .. 
         {
             foreach (var worker in Workers)
             {
@@ -67,6 +60,8 @@ namespace SQLiteDiskExplorer.UI
 
         public void ShowAnalysis()
         {
+            LoadResult();
+
             if (ImGui.BeginTabBar("ControlTabs", ImGuiTabBarFlags.None))
             {
                 foreach (KeyValuePair<DriveInfo, List<FileInfo>> info in DrivePathsMap)
@@ -80,10 +75,9 @@ namespace SQLiteDiskExplorer.UI
                         {
                             ImGui.BeginTable("Files", 3, ImGuiTableFlags.Resizable | ImGuiTableFlags.NoSavedSettings | ImGuiTableFlags.Borders);
                             ImGui.TableSetupColumn("Name");
-                            ImGui.TableSetupColumn("Date");
-                            ImGui.TableSetupColumn("Size");
+                            ImGui.TableSetupColumn("Date",ImGuiTableColumnFlags.WidthFixed);
+                            ImGui.TableSetupColumn("Size",ImGuiTableColumnFlags.WidthFixed);
                             ImGui.TableHeadersRow();
-
                             foreach(FileInfo file in info.Value)
                             {
                                 ImGui.TableNextRow();
@@ -93,12 +87,10 @@ namespace SQLiteDiskExplorer.UI
                                 ImGui.TableNextColumn();
                                 ImGui.Text(file.CreationTime.ToString());
                                 ImGui.TableNextColumn();
-                                ImGui.Text(file.Length.ToString());
+                                ImGui.Text(Drive.FormatSize(file.Length));
                                 ImGui.TableNextColumn();
                             }
-
                             ImGui.EndTable();
-
                             ImGui.EndChild();
                         }
                         ImGui.EndTabItem();

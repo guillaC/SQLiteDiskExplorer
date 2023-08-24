@@ -21,11 +21,10 @@ namespace SQLiteDiskExplorer.UI
                 firstLoad = !firstLoad;
             }
 
-
             ImGui.SeparatorText("About");
-            ImGui.Text("This is a free software; it may be used and copied under the Gnu General Public License. \n");
-            ImGui.Text("Github: github.com/guillaC\n" +
-                "Contact: @mail");
+            ImGui.Text("This is a free software; it may be used and copied under the Gnu General Public License.");
+            ImGui.Text("Github: github.com/guillaC");
+            ImGui.Text("Contact: @mail");
             ImGui.Separator();
             ImGui.Text("Feel free to reach out for any inquiries, suggestions, or feedback");
             ImGui.SeparatorText("Disclaimer");

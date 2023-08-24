@@ -8,12 +8,12 @@ namespace SQLiteDiskExplorer.Core
         EnumerationOptions options = new EnumerationOptions()
         {
             IgnoreInaccessible = true,
-            RecurseSubdirectories = true, // for testing only
+            RecurseSubdirectories = true,
         };
 
         IEnumerable<string> paths = Enumerable.Empty<string>();
-
         List<FileInfo> result = new List<FileInfo>();
+        private object lockObject = new object();
 
         private int remainingThreads;
         private readonly ManualResetEventSlim resetEvent = new ManualResetEventSlim(false);
@@ -26,8 +26,12 @@ namespace SQLiteDiskExplorer.Core
 
         public List<FileInfo> returnResult()
         {
-            // ici lock, utiliser un object autre à lock
-            return new List<FileInfo>(result);
+            List<FileInfo> copy;
+            lock (lockObject)
+            {
+                copy = new List<FileInfo>(result);
+            }
+            return copy;
         }
 
         public void Scan()
@@ -40,7 +44,7 @@ namespace SQLiteDiskExplorer.Core
                 {
                     if (IsSQLiteFile(file))
                     {
-                        lock (result)
+                        lock (lockObject)
                         {
                             result.Add(new FileInfo(file));
                         }
@@ -58,18 +62,23 @@ namespace SQLiteDiskExplorer.Core
 
         private void Enumerate(DriveInfo drive)
         {
-            SearchOption searchOption = SearchOption.TopDirectoryOnly;
-            if (options.RecurseSubdirectories) searchOption = SearchOption.AllDirectories;
-
             Console.WriteLine("Enumerating..");
 
             try
             {
-                var paths = Directory.EnumerateFiles(drive.Name, "*", searchOption);
+                var paths = Directory.EnumerateFiles(drive.Name, "*", options);
+
+                int nbF = 0;
                 foreach (string path in paths)// Only For Testing
                 {
-                    Console.WriteLine(path);
-                    result.Add(new FileInfo(path));
+                    lock (lockObject)
+                    {
+                        result.Add(new FileInfo(path));
+                    }
+
+                    nbF++;
+                    if (nbF == 100) return;
+
                 }
                 Console.WriteLine("Enumerate OK");
             }
