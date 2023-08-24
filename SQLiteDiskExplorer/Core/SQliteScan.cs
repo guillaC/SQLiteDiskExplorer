@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using System.Threading.Tasks;
 
 namespace SQLiteDiskExplorer.Core
@@ -11,21 +8,26 @@ namespace SQLiteDiskExplorer.Core
         EnumerationOptions options = new EnumerationOptions()
         {
             IgnoreInaccessible = true,
-            RecurseSubdirectories = true,
+            RecurseSubdirectories = true, // for testing only
         };
 
         IEnumerable<string> paths = Enumerable.Empty<string>();
 
-        List<string> result = new List<string>();
+        List<FileInfo> result = new List<FileInfo>();
 
         private int remainingThreads;
         private readonly ManualResetEventSlim resetEvent = new ManualResetEventSlim(false);
 
         public SQliteScan(DriveInfo drive)
         {
-            var paths = Directory.EnumerateFiles(drive.Name, "*", options);
-            paths = paths.Where(file => !file.Contains("\\Windows\\")).ToList();
             remainingThreads = paths.Count();
+            Task.Run(() => Enumerate(drive));
+        }
+
+        public List<FileInfo> returnResult()
+        {
+            // ici lock, utiliser un object autre à lock
+            return new List<FileInfo>(result);
         }
 
         public void Scan()
@@ -40,7 +42,7 @@ namespace SQLiteDiskExplorer.Core
                     {
                         lock (result)
                         {
-                            result.Add(file);
+                            result.Add(new FileInfo(file));
                         }
                     }
 
@@ -52,6 +54,29 @@ namespace SQLiteDiskExplorer.Core
             }
 
             resetEvent.Wait();
+        }
+
+        private void Enumerate(DriveInfo drive)
+        {
+            SearchOption searchOption = SearchOption.TopDirectoryOnly;
+            if (options.RecurseSubdirectories) searchOption = SearchOption.AllDirectories;
+
+            Console.WriteLine("Enumerating..");
+
+            try
+            {
+                var paths = Directory.EnumerateFiles(drive.Name, "*", searchOption);
+                foreach (string path in paths)// Only For Testing
+                {
+                    Console.WriteLine(path);
+                    result.Add(new FileInfo(path));
+                }
+                Console.WriteLine("Enumerate OK");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error enumerating files: {ex.Message}");
+            }
         }
 
         private bool IsSQLiteFile(string file)

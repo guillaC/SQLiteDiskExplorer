@@ -1,6 +1,4 @@
-﻿using ImGuiNET;
-using ClickableTransparentOverlay;
-using SQLiteDiskExplorer.Utils;
+﻿using ClickableTransparentOverlay;
 using SQLiteDiskExplorer.UI;
 
 namespace SQLiteDiskExplorer
@@ -20,6 +18,7 @@ namespace SQLiteDiskExplorer
                 mainForm = new(this);
                 firstLoad = !firstLoad;
             }
+
 
             mainForm.Show();
 

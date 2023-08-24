@@ -5,10 +5,10 @@ using SQLiteDiskExplorer.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace SQLiteDiskExplorer.UI
 {
@@ -25,7 +25,8 @@ namespace SQLiteDiskExplorer.UI
 
         bool srbg = true;
         IntPtr imageHandle;
-        uint imageHeight, imageWidth;
+
+        uint imageWidth, imageHeight;
 
         public MainUI(RenderControllerClass rcClass)
         {
@@ -127,6 +128,8 @@ namespace SQLiteDiskExplorer.UI
 
         private void ShowActions()
         {
+
+
             if (ImGui.Button("Process"))
             {
                 List<DriveInfo> selectedDrives = drives
