@@ -1,11 +1,12 @@
-﻿using System.Text;
+﻿using SQLiteDiskExplorer.Model;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace SQLiteDiskExplorer.Core
 {
     public class SQliteScan
     {
-        public enum State { Waiting, Error, Enumerating, Scanning, Done};
+        public enum State { Waiting, Error, Enumerating, Scanning, Done };
         public State WorkerState = State.Waiting;
 
         EnumerationOptions options = new EnumerationOptions()
@@ -41,7 +42,7 @@ namespace SQLiteDiskExplorer.Core
         public float GetScanProgress()
         {
             if (totalNbFiles == 0)
-               
+
                 return 0.0f;
 
             return (float)Math.Round((double)totalProcessedFiles / totalNbFiles, 2);
@@ -62,7 +63,7 @@ namespace SQLiteDiskExplorer.Core
                     lock (lockObject)
                     {
                         result.Add(new FileInfo(file));
-                        Console.WriteLine( $"{totalNbFiles} / {totalProcessedFiles}");
+                        Console.WriteLine($"{totalNbFiles} / {totalProcessedFiles}");
                     }
                 }
             });
@@ -91,7 +92,7 @@ namespace SQLiteDiskExplorer.Core
 
         }
 
-        private bool IsSQLiteFile(string file) //https://www.sqlite.org/fileformat.html
+        private bool IsSQLiteFile(string file)
         {
             byte[] header = new byte[16];
 
@@ -102,7 +103,7 @@ namespace SQLiteDiskExplorer.Core
                     stream.Read(header, 0, 16);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(file);
                 Console.WriteLine(ex.Message);
@@ -112,5 +113,26 @@ namespace SQLiteDiskExplorer.Core
             string headerText = Encoding.UTF8.GetString(header);
             return headerText.StartsWith("SQLite format");
         }
-    }
+
+        private SQLiteFileHeader? GetHeader(string file)
+        {
+            byte[] header = new byte[100];
+
+            try
+            {
+                using (FileStream stream = new FileStream(file, FileMode.Open, FileAccess.Read))
+                {
+                    stream.Read(header, 0, 100);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(file);
+                Console.WriteLine(ex.Message);
+                return null;
+            }
+
+            return new SQLiteFileHeader(header);
+        }
+}
 }
