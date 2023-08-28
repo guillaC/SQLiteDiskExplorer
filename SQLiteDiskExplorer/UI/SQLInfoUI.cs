@@ -1,5 +1,7 @@
 ﻿using ClickableTransparentOverlay;
 using ImGuiNET;
+using SQLiteDiskExplorer.Core;
+using SQLiteDiskExplorer.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,46 +10,36 @@ using System.Threading.Tasks;
 
 namespace SQLiteDiskExplorer.UI
 {
-    public class ConfigurationUI
+    public class SQLInfoUI
     {
         bool firstLoad = true;
         bool isOpen = true;
+        SQLiteFileHeader HeaderInfo;
+
+        public SQLInfoUI(SQLiteFileHeader headerInfo)
+        {
+            HeaderInfo = headerInfo;
+        }
 
         public void Show()
         {
             if (!isOpen) return;
-            ImGui.Begin("Configuration", ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.AlwaysAutoResize);
+            ImGui.Begin("Information", ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.AlwaysAutoResize);
 
             if (firstLoad)
             {
-
                 firstLoad = !firstLoad;
             }
 
-            ShowCurrentConfiguration();
             ShowActions();
             ImGui.End();
         }
 
-        private void ShowCurrentConfiguration()
-        {
-            ImGui.SeparatorText("Configuration");
-
-            // Load Config & show
-
-            ImGui.Text("test");
-
-        }
-        private void ShowActions()
+        public void ShowActions()
         {
             if (ImGui.Button("Exit"))
             {
                 isOpen = false;
-            }
-            ImGui.SameLine();
-            if (ImGui.Button("Save"))
-            {
-
             }
         }
     }

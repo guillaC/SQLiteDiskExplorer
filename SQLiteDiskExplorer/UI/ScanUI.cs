@@ -1,6 +1,7 @@
 ﻿using ImGuiNET;
 using SQLiteDiskExplorer.Core;
 using SQLiteDiskExplorer.Utils;
+using System.Numerics;
 
 namespace SQLiteDiskExplorer.UI
 {
@@ -28,6 +29,7 @@ namespace SQLiteDiskExplorer.UI
             ImGui.Begin("Analysis", ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.AlwaysAutoResize);
             if (firstLoad)
             {
+                ApplyStyle();
                 firstLoad = !firstLoad;
             }
 
@@ -37,6 +39,11 @@ namespace SQLiteDiskExplorer.UI
             ShowAnalysis();
 
             ImGui.End();
+        }
+
+        private void ApplyStyle()
+        {
+            // ImGui.PushStyleColor(ImGuiCol.PlotHistogram, new Vector4(11, 22, 33, 44));
         }
 
         private void ShowProgress()
