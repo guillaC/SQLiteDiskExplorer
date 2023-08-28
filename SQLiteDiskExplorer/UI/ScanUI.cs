@@ -6,7 +6,9 @@ namespace SQLiteDiskExplorer.UI
 {
     public class ScanUI
     {
-        bool firstLoad = true;
+        bool firstLoad = true; 
+        bool isOpen = true;
+        bool cancelProcessing = false;
 
         Dictionary<DriveInfo, List<FileInfo>> DrivePathsMap = new();
         Dictionary<DriveInfo, SQliteScan> Workers = new();
@@ -22,6 +24,7 @@ namespace SQLiteDiskExplorer.UI
 
         public void Show()
         {
+            if (!isOpen) return;
             ImGui.Begin("Analysis", ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.AlwaysAutoResize);
             if (firstLoad)
             {
@@ -29,11 +32,14 @@ namespace SQLiteDiskExplorer.UI
             }
 
             ShowProgress();
+            ShowScannerActions();
+
             ShowAnalysis();
+
             ImGui.End();
         }
 
-        public void ShowProgress()
+        private void ShowProgress()
         {
             ImGui.SeparatorText("Progress");
             foreach (var worker in Workers)
@@ -42,7 +48,28 @@ namespace SQLiteDiskExplorer.UI
             }
         }
 
-        public void LoadResult() // use timer .. 
+        private void ShowScannerActions()
+        {
+            ImGui.SeparatorText("Actions");
+
+            if (!cancelProcessing)
+            {
+                if (ImGui.Button("Stop"))
+                {
+                    CancelWorker();
+                }
+            }
+
+            ImGui.SameLine();
+
+            if (ImGui.Button("Exit"))
+            {
+                if (!cancelProcessing) CancelWorker();
+                isOpen = false;
+            }
+        }
+
+        private void LoadResult()
         {
             foreach (var worker in Workers)
             {
@@ -50,7 +77,16 @@ namespace SQLiteDiskExplorer.UI
             }
         }
 
-        public void ShowAnalysis()
+        private void CancelWorker()
+        {
+            cancelProcessing = true;
+            foreach (var worker in Workers)
+            {
+                worker.Value.StopScan();
+            }
+        }
+
+        private void ShowAnalysis()
         {
             LoadResult();
             ImGui.SeparatorText("Analysis");

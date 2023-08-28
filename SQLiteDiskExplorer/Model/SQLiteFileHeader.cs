@@ -34,11 +34,5 @@ namespace SQLiteDiskExplorer.Model
             VersionValidForNumber = BitConverter.ToUInt32(header, 92);
             SQLiteVersionNumber = BitConverter.ToUInt32(header, 96);
         }
-
-        private struct x
-        {
-
-        }
-
     }
 }

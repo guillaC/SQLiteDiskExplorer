@@ -1,12 +1,13 @@
 ﻿using SQLiteDiskExplorer.Model;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SQLiteDiskExplorer.Core
 {
     public class SQliteScan
     {
-        public enum State { Waiting, Error, Enumerating, Scanning, Done };
+        public enum State { Waiting, Error, Canceled, Enumerating, Scanning, Done };
         public State WorkerState = State.Waiting;
 
         EnumerationOptions options = new EnumerationOptions()
@@ -17,7 +18,9 @@ namespace SQLiteDiskExplorer.Core
 
         private List<string> paths = new();
         private List<FileInfo> result = new();
+
         private object lockObject = new object();
+        private CancellationTokenSource cancellationTkn = new CancellationTokenSource();
 
         private int totalNbFiles, totalProcessedFiles = 0;
 
@@ -39,11 +42,14 @@ namespace SQLiteDiskExplorer.Core
             return copy;
         }
 
+        public void StopScan()
+        {
+            cancellationTkn.Cancel();
+        }
+
         public float GetScanProgress()
         {
-            if (totalNbFiles == 0)
-
-                return 0.0f;
+            if (totalNbFiles == 0) return 0.0f;
 
             return (float)Math.Round((double)totalProcessedFiles / totalNbFiles, 2);
         }
@@ -54,22 +60,34 @@ namespace SQLiteDiskExplorer.Core
             WorkerState = State.Scanning;
 
             Console.WriteLine($"{paths.Count()} files to scan");
-
-            Parallel.ForEach(paths, file =>
-            {
-                totalProcessedFiles++;
-                if (IsSQLiteFile(file))
+            Parallel.ForEach(paths, (file, parallelLoop) =>
                 {
-                    lock (lockObject)
+                    totalProcessedFiles++;
+                    if (IsSQLiteFile(file))
                     {
-                        result.Add(new FileInfo(file));
-                        Console.WriteLine($"{totalNbFiles} / {totalProcessedFiles}");
+                        lock (lockObject)
+                        {
+                            result.Add(new FileInfo(file));
+                            Console.WriteLine($"{totalNbFiles} / {totalProcessedFiles}");
+                        }
                     }
-                }
-            });
+                    if (cancellationTkn.Token.IsCancellationRequested)
+                    {
+                        parallelLoop.Break();
+                    }
+                });
 
-            WorkerState = State.Done;
-            Console.WriteLine("All files processed.");
+            if (cancellationTkn.Token.IsCancellationRequested)
+            {
+                WorkerState = State.Canceled;
+                Console.WriteLine("Scanning canceled.");
+            }
+            else
+            {
+                WorkerState = State.Done;
+                Console.WriteLine("All files processed.");
+            }
+
         }
 
         private void EnumerateAndScanFiles(DriveInfo drive)
@@ -134,5 +152,5 @@ namespace SQLiteDiskExplorer.Core
 
             return new SQLiteFileHeader(header);
         }
-}
+    }
 }
