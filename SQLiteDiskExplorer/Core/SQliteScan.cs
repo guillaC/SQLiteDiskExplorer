@@ -1,7 +1,9 @@
 ﻿using SQLiteDiskExplorer.Model;
+using SQLiteDiskExplorer.Utils;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+
 
 namespace SQLiteDiskExplorer.Core
 {
@@ -11,11 +13,7 @@ namespace SQLiteDiskExplorer.Core
         public enum State { Waiting, Error, Canceled, Enumerating, Scanning, Done };
         public State WorkerState = State.Waiting;
 
-        EnumerationOptions options = new EnumerationOptions()
-        {
-            IgnoreInaccessible = true,
-            RecurseSubdirectories = true,
-        };
+        EnumerationOptions options;
 
         private List<string> paths = new();
         private List<FileInfo> result = new();
@@ -27,6 +25,8 @@ namespace SQLiteDiskExplorer.Core
 
         public SQliteScan(DriveInfo drive)
         {
+            loadConfigVar();
+
             Task.Run(() =>
             {
                 EnumerateAndScanFiles(drive);
@@ -87,6 +87,17 @@ namespace SQLiteDiskExplorer.Core
                 WorkerState = State.Done;
                 Console.WriteLine("All files processed.");
             }
+        }
+
+        private void loadConfigVar()
+        {
+            AppConfig config = ConfigurationManager.LoadConfiguration();
+
+            options = new EnumerationOptions()
+            {
+                IgnoreInaccessible = config.IgnoreInaccessible,
+                RecurseSubdirectories = config.RecurseSubdirectories,
+            };
         }
 
         private void EnumerateAndScanFiles(DriveInfo drive)

@@ -134,6 +134,7 @@ namespace SQLiteDiskExplorer.UI
 
         private void ShowActions()
         {
+            ImGui.SetCursorPosX(ImGui.GetWindowSize().X - 65);
             if (ImGui.Button("Process"))
             {
                 List<DriveInfo> selectedDrives = drives

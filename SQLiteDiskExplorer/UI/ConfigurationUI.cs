@@ -1,8 +1,6 @@
-﻿using ClickableTransparentOverlay;
-using ImGuiNET;
+﻿using ImGuiNET;
 using SQLiteDiskExplorer.Model;
 using SQLiteDiskExplorer.Utils;
-using AppConfig = SQLiteDiskExplorer.Model.AppConfig;
 
 namespace SQLiteDiskExplorer.UI
 {
@@ -13,7 +11,6 @@ namespace SQLiteDiskExplorer.UI
         int selectedLbID;
 
         AppConfig config;
-
 
         public void Show()
         {

@@ -10,6 +10,22 @@ namespace SQLiteDiskExplorer.Utils
 
         public static AppConfig LoadConfiguration()
         {
+
+            if (!File.Exists(PATH))
+            {
+                AppConfig config = new()
+                {
+                    CheckColumnKeywordPresence = true,
+                    CheckPathKeywordPresence = true,
+                    CopyToTempIfOpnInAnotherProcess = true,
+                    IgnoreInaccessible = true,
+                    RecurseSubdirectories = true,
+                    ImportantKeywords = new()
+                };
+                SaveConfiguration(config);
+            }
+
+
             string json = File.ReadAllText(PATH);
             return JsonSerializer.Deserialize<AppConfig>(json);
         }

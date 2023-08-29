@@ -38,8 +38,9 @@ namespace SQLiteDiskExplorer.UI
                 "facilitate the retrieval of data from SQLite files.");
             ImGui.Text("I take no responsibility for how this program is used.");
             
-            ImGui.SameLine(500);
+            ImGui.SameLine();
 
+            ImGui.SetCursorPosX(ImGui.GetWindowSize().X - 45);
             if (ImGui.Button("Exit"))
             {
                 isOpen = false;
