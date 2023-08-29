@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace SQLiteDiskExplorer.Core
 {
+    [Serializable]
     public class SQliteScan
     {
         public enum State { Waiting, Error, Canceled, Enumerating, Scanning, Done };
@@ -50,7 +51,6 @@ namespace SQLiteDiskExplorer.Core
         public float GetScanProgress()
         {
             if (totalNbFiles == 0) return 0.0f;
-
             return (float)Math.Round((double)totalProcessedFiles / totalNbFiles, 2);
         }
 
@@ -87,7 +87,6 @@ namespace SQLiteDiskExplorer.Core
                 WorkerState = State.Done;
                 Console.WriteLine("All files processed.");
             }
-
         }
 
         private void EnumerateAndScanFiles(DriveInfo drive)
@@ -107,7 +106,6 @@ namespace SQLiteDiskExplorer.Core
                 Console.WriteLine($"Error enumerating files: {ex.Message}");
                 WorkerState = State.Error;
             }
-
         }
 
         private bool IsSQLiteFile(string file)
