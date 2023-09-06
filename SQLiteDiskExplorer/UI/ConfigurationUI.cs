@@ -9,6 +9,7 @@ namespace SQLiteDiskExplorer.UI
         bool firstLoad = true;
         bool isOpen = true;
         int selectedLbID;
+        string newKeyWord = "";
 
         AppConfig config;
 
@@ -31,27 +32,33 @@ namespace SQLiteDiskExplorer.UI
         private void ShowCurrentConfiguration()
         {
             ImGui.BeginGroup();
-            ImGui.SeparatorText("Configuration");
             config.RecurseSubdirectories = ShowCheckboxAndGetUpdatedValue(config.RecurseSubdirectories, "Scan Subdirectories");
             config.IgnoreInaccessible = ShowCheckboxAndGetUpdatedValue(config.IgnoreInaccessible, "Ignore Inaccessible Files");
+            Front.HelpMarker("Stops analysis when access is denied.");
             config.CopyToTempIfOpnInAnotherProcess = ShowCheckboxAndGetUpdatedValue(config.CopyToTempIfOpnInAnotherProcess, "Copy to Temp Directory if File Open in Another Process");
+            Front.HelpMarker("If a file is being used by another process, accessing its content is possible through a copy.\nThe application will create copies in the TEMP directory during the scan.\nThese files will be highlighted in reports (yellow font).");
             config.CheckPathKeywordPresence = ShowCheckboxAndGetUpdatedValue(config.CheckPathKeywordPresence, "Check Keyword in File Path");
+            Front.HelpMarker("Checks if any of the right words exist in a file path.\nThese files will be highlighted in reports (pink font).");
             config.CheckColumnKeywordPresence = ShowCheckboxAndGetUpdatedValue(config.CheckColumnKeywordPresence, "Check Keyword in Columns");
+            Front.HelpMarker("Checks if any of the right words exist in any columns of SQLite files.\nThese files will be highlighted in reports (red font).");
             ImGui.EndGroup();
-
             ImGui.SameLine();
-
             ImGui.BeginGroup();
             ImGui.SeparatorText("Keywords");
             ImGui.ListBox("", ref selectedLbID, config.ImportantKeywords.ToArray(), config.ImportantKeywords.Count(), 10);
 
+            ImGui.InputTextWithHint("", "Case-insensitive", ref newKeyWord, 25);
 
-            if (ImGui.Button("+"))
+            if (ImGui.Button("Add"))
             {
-                
+                if (!string.IsNullOrWhiteSpace(newKeyWord) && !config.ImportantKeywords.Contains(newKeyWord))
+                {
+                    config.ImportantKeywords.Add(newKeyWord.ToLower());
+                }
+                newKeyWord = "";
             }
             ImGui.SameLine();
-            if (ImGui.Button("-"))
+            if (ImGui.Button("Remove"))
             {
                 config.ImportantKeywords.Remove(config.ImportantKeywords[selectedLbID]);
             }
