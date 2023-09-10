@@ -21,9 +21,6 @@ namespace SQLiteDiskExplorer.UI
         public ScanUI(List<DriveInfo> pSelectedDrive)
         {
             config = ConfigurationManager.LoadConfiguration();
-            config.ImportantKeywords = config.ImportantKeywords.ConvertAll(d => d.ToLower());
-
-            Console.WriteLine("la config est chargée et contient " + config.ImportantKeywords.Count);
 
             foreach (string ze in config.ImportantKeywords)
             {

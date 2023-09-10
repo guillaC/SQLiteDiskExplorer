@@ -57,9 +57,6 @@ namespace SQLiteDiskExplorer.UI
         {
             ImGui.BeginMenuBar();
 
-            ImGui.PushStyleColor(ImGuiCol.Button, new System.Numerics.Vector4());
-
-
             if (ImGui.MenuItem("Configuration"))
             {
                 ShowConfigForm();
@@ -76,7 +73,6 @@ namespace SQLiteDiskExplorer.UI
                 Environment.Exit(0);
             }
 
-            ImGui.PopStyleColor();
             ImGui.EndMenuBar();
         }
 
@@ -90,10 +86,10 @@ namespace SQLiteDiskExplorer.UI
             ImGui.BeginChild("ChildGuide", new Vector2(620, 100));
             ImGui.SeparatorText("User Guide");
             ImGui.Text("To begin, select one or more disks for analysis.\n" +
-                   "You can browse SQLite files within this tool or perform a global or partial export.\n" +
-                   "The exported files will be saved in a directory named based on the current date,\n" +
-                   "which is located in the same directory as the application.\n" +
-                   "For complete results, run the application as an admin when scanning the system disk.");
+                       "You can browse SQLite files within this tool or perform a global or partial export.\n" +
+                       "The exported files will be saved in a directory named based on the current date,\n" +
+                       "which is located in the same directory as the application.\n" +
+                       "For complete results, run the application as an admin when scanning the system disk.");
             ImGui.EndChild();
         }
         private void ShowDrives()
@@ -137,11 +133,10 @@ namespace SQLiteDiskExplorer.UI
             ImGui.SetCursorPosX(ImGui.GetWindowSize().X - 65);
             if (ImGui.Button("Process"))
             {
-                List<DriveInfo> selectedDrives = drives
-    .Select((drive, index) => new { Drive = drive, Index = index })
-    .Where(item => selectedDrive[item.Index])
-    .Select(item => item.Drive)
-    .ToList();
+                List<DriveInfo> selectedDrives = drives.Select((drive, index) => new { Drive = drive, Index = index })
+                                                       .Where(item => selectedDrive[item.Index])
+                                                       .Select(item => item.Drive)
+                                                       .ToList();
                 RenderControllerClass.scanForm = new ScanUI(selectedDrives);
             }
         }

@@ -7,7 +7,7 @@ namespace SQLiteDiskExplorer.Utils
     {
         const string PATH = ".\\Res\\Config.json";
 
-        public static AppConfig LoadConfiguration()
+        public static AppConfig? LoadConfiguration()
         {
 
             if (!File.Exists(PATH))
@@ -26,7 +26,10 @@ namespace SQLiteDiskExplorer.Utils
 
 
             string json = File.ReadAllText(PATH);
-            return JsonSerializer.Deserialize<AppConfig>(json);
+            AppConfig result = JsonSerializer.Deserialize<AppConfig>(json);
+            result.ImportantKeywords = result.ImportantKeywords.ConvertAll(d => d.ToLower());
+            return result;
+
         }
 
         public static void SaveConfiguration(AppConfig config)

@@ -14,11 +14,11 @@ namespace SQLiteDiskExplorer.UI
     {
         bool firstLoad = true;
         bool isOpen = true;
-        SQLiteFileHeader HeaderInfo;
+        FileItem FileItem;
 
-        public SQLInfoUI(SQLiteFileHeader headerInfo)
+        public SQLInfoUI(FileItem fileitem)
         {
-            HeaderInfo = headerInfo;
+            FileItem = fileitem;
         }
 
         public void Show()
