@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SQLiteDiskExplorer.Model
+﻿namespace SQLiteDiskExplorer.Model
 {
+    [Serializable]
     public class AppConfig
     {
         public bool IgnoreInaccessible { get; set; }

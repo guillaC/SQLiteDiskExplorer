@@ -13,7 +13,7 @@ namespace SQLiteDiskExplorer.UI
         bool isOpen = true;
         bool cancelProcessing = false;
 
-        Dictionary<DriveInfo, List<FileInfo>> DrivePathsMap = new();
+        Dictionary<DriveInfo, List<FileItem>> DrivePathsMap = new();
         Dictionary<DriveInfo, SQliteScan> Workers = new();
 
         AppConfig config;
@@ -32,7 +32,7 @@ namespace SQLiteDiskExplorer.UI
 
             foreach (var drive in pSelectedDrive)
             {
-                DrivePathsMap.Add(drive, new List<FileInfo>());
+                DrivePathsMap.Add(drive, new List<FileItem>());
                 Workers.Add(drive, new SQliteScan(drive));
             }
         }
@@ -94,7 +94,7 @@ namespace SQLiteDiskExplorer.UI
         {
             foreach (var worker in Workers)
             {
-                DrivePathsMap[worker.Key] = worker.Value.returnResult();
+                DrivePathsMap[worker.Key] = worker.Value.ReturnResult();
             }
         }
 
@@ -113,7 +113,7 @@ namespace SQLiteDiskExplorer.UI
             ImGui.SeparatorText("Analysis");
             if (ImGui.BeginTabBar("ControlTabs", ImGuiTabBarFlags.None))
             {
-                foreach (KeyValuePair<DriveInfo, List<FileInfo>> info in DrivePathsMap)
+                foreach (KeyValuePair<DriveInfo, List<FileItem>> info in DrivePathsMap)
                 {
                     var drive = info.Key;
 
@@ -127,20 +127,20 @@ namespace SQLiteDiskExplorer.UI
                             ImGui.TableSetupColumn("Date", ImGuiTableColumnFlags.NoResize, 0.15f);
                             ImGui.TableSetupColumn("Size", ImGuiTableColumnFlags.NoResize, 0.07f);
                             ImGui.TableHeadersRow();
-                            foreach (FileInfo file in info.Value)
+                            foreach (FileItem file in info.Value)
                             {
                                 ImGui.TableNextColumn();
-                                if (config.CheckPathKeywordPresence && config.ImportantKeywords.Any(keyword => file.FullName.Contains(keyword.ToLower())))
+                                if (config.CheckPathKeywordPresence && config.ImportantKeywords.Any(keyword => file.FileInfo.FullName.Contains(keyword.ToLower())))
                                 {
                                     ImGui.TextColored((Vector4)Color.Violet, "[KeywordInPath]");
                                     ImGui.SameLine();
                                 }
 
-                                ImGui.Text(file.FullName);
+                                ImGui.Text(file.FileInfo.FullName);
                                 ImGui.TableNextColumn();
-                                ImGui.Text(file.CreationTime.ToString());
+                                ImGui.Text(file.FileInfo.CreationTime.ToString());
                                 ImGui.TableNextColumn();
-                                ImGui.Text(Drive.FormatSize(file.Length));
+                                ImGui.Text(Drive.FormatSize(file.FileInfo.Length));
                                 ImGui.TableNextRow();
                             }
                             ImGui.EndTable();

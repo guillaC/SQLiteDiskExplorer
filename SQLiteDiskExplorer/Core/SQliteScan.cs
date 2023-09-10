@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 
 namespace SQLiteDiskExplorer.Core
 {
-    [Serializable]
     public class SQliteScan
     {
         public enum State { Waiting, Error, Canceled, Enumerating, Scanning, Done };
@@ -16,16 +15,16 @@ namespace SQLiteDiskExplorer.Core
         EnumerationOptions options;
 
         private List<string> paths = new();
-        private List<FileInfo> result = new();
+        private readonly List<FileItem> result = new();
 
-        private object lockObject = new object();
-        private CancellationTokenSource cancellationTkn = new CancellationTokenSource();
+        private readonly object lockObject = new object();
+        private readonly CancellationTokenSource cancellationTkn = new CancellationTokenSource();
 
         private int totalNbFiles, totalProcessedFiles = 0;
 
         public SQliteScan(DriveInfo drive)
         {
-            loadConfigVar();
+            LoadConfigVar();
 
             Task.Run(() =>
             {
@@ -33,12 +32,12 @@ namespace SQLiteDiskExplorer.Core
             });
         }
 
-        public List<FileInfo> returnResult()
+        public List<FileItem> ReturnResult()
         {
-            List<FileInfo> copy;
+            List<FileItem> copy;
             lock (lockObject)
             {
-                copy = new List<FileInfo>(result);
+                copy = new List<FileItem>(result);
             }
             return copy;
         }
@@ -65,9 +64,11 @@ namespace SQLiteDiskExplorer.Core
                     totalProcessedFiles++;
                     if (IsSQLiteFile(file))
                     {
+                        FileItem fItem = new(new FileInfo(file), GetHeader(file));
+
                         lock (lockObject)
                         {
-                            result.Add(new FileInfo(file));
+                            result.Add(fItem);
                             Console.WriteLine($"{totalNbFiles} / {totalProcessedFiles}");
                         }
                     }
@@ -89,7 +90,7 @@ namespace SQLiteDiskExplorer.Core
             }
         }
 
-        private void loadConfigVar()
+        private void LoadConfigVar()
         {
             AppConfig config = ConfigurationManager.LoadConfiguration();
 
@@ -119,7 +120,7 @@ namespace SQLiteDiskExplorer.Core
             }
         }
 
-        private bool IsSQLiteFile(string file)
+        private static bool IsSQLiteFile(string file)
         {
             byte[] header = new byte[16];
 
@@ -141,7 +142,7 @@ namespace SQLiteDiskExplorer.Core
             return headerText.StartsWith("SQLite format");
         }
 
-        private SQLiteFileHeader? GetHeader(string file)
+        private static SQLiteFileHeader? GetHeader(string file)
         {
             byte[] header = new byte[100];
 

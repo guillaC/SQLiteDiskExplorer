@@ -3,7 +3,6 @@ using System.Text.Json;
 
 namespace SQLiteDiskExplorer.Utils
 {
-
     public static class ConfigurationManager
     {
         const string PATH = ".\\Res\\Config.json";
