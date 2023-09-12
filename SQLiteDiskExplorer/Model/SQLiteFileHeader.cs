@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using ImGuiNET;
+using System.Text;
 
 namespace SQLiteDiskExplorer.Model
 {
@@ -8,6 +9,7 @@ namespace SQLiteDiskExplorer.Model
         public ushort PageSize { get; set; }
         public byte FileFormatWriteVersion { get; set; }
         public byte FileFormatReadVersion { get; set; }
+        public uint FileChangeCounter { get; set; }
         public uint DatabaseSizeInPages { get; set; }
         public uint FirstFreelistTrunkPage { get; set; }
         public uint TotalFreelistPages { get; set; }
@@ -21,9 +23,11 @@ namespace SQLiteDiskExplorer.Model
         public SQLiteFileHeader(byte[] header)
         {
             Header = header;
+
             PageSize = BitConverter.ToUInt16(header, 16);
             FileFormatWriteVersion = header[18];
             FileFormatReadVersion = header[19];
+            FileChangeCounter = BitConverter.ToUInt32(header, 24);
             DatabaseSizeInPages = BitConverter.ToUInt32(header, 28);
             FirstFreelistTrunkPage = BitConverter.ToUInt32(header, 32);
             TotalFreelistPages = BitConverter.ToUInt32(header, 36);
