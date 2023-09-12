@@ -46,7 +46,6 @@ namespace SQLiteDiskExplorer.UI
 
             ShowProgress();
             ShowScannerActions();
-
             ShowAnalysis();
 
             ImGui.End();
@@ -76,9 +75,8 @@ namespace SQLiteDiskExplorer.UI
                 {
                     CancelWorker();
                 }
+                ImGui.SameLine();
             }
-
-            ImGui.SameLine();
 
             if (ImGui.Button("Exit"))
             {
@@ -119,10 +117,11 @@ namespace SQLiteDiskExplorer.UI
                         ImGui.SeparatorText("Result");
                         if (ImGui.BeginChild($"Result {drive.Name}", new System.Numerics.Vector2(1200, 650)))
                         {
-                            ImGui.BeginTable("Files", 3, ImGuiTableFlags.Resizable | ImGuiTableFlags.NoSavedSettings | ImGuiTableFlags.Borders);
-                            ImGui.TableSetupColumn("Name", ImGuiTableColumnFlags.NoResize, 0.78f);
+                            ImGui.BeginTable("Files", 4, ImGuiTableFlags.Resizable | ImGuiTableFlags.NoSavedSettings | ImGuiTableFlags.Borders);
+                            ImGui.TableSetupColumn("Name", ImGuiTableColumnFlags.NoResize, 0.65f);
                             ImGui.TableSetupColumn("Date", ImGuiTableColumnFlags.NoResize, 0.15f);
                             ImGui.TableSetupColumn("Size", ImGuiTableColumnFlags.NoResize, 0.07f);
+                            ImGui.TableSetupColumn("Action", ImGuiTableColumnFlags.NoResize, 0.13f);
                             ImGui.TableHeadersRow();
                             foreach (FileItem file in info.Value)
                             {
@@ -138,6 +137,23 @@ namespace SQLiteDiskExplorer.UI
                                 ImGui.Text(file.FileInfo.CreationTime.ToString());
                                 ImGui.TableNextColumn();
                                 ImGui.Text(Drive.FormatSize(file.FileInfo.Length));
+                                ImGui.TableNextColumn();
+                                
+                                ImGui.PushID($"Information#{file.FileInfo.FullName}");
+
+                                if (ImGui.SmallButton("Information"))
+                                {
+                                    Console.WriteLine("Information");
+                                    RenderControllerClass.infoForm = new SQLInfoUI(file);
+                                }
+                                ImGui.SameLine();
+                                if (ImGui.SmallButton("Open"))
+                                {
+                                    Console.WriteLine("Open");
+                                }
+
+                                ImGui.PopID();
+
                                 ImGui.TableNextRow();
                             }
                             ImGui.EndTable();
