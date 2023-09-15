@@ -16,7 +16,6 @@ namespace SQLiteDiskExplorer.Utils
                 {
                     CheckColumnKeywordPresence = true,
                     CheckPathKeywordPresence = true,
-                    CopyToTempIfOpnInAnotherProcess = true,
                     IgnoreInaccessible = true,
                     RecurseSubdirectories = true,
                     ImportantKeywords = new()

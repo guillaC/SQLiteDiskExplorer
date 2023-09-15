@@ -128,7 +128,13 @@ namespace SQLiteDiskExplorer.UI
                                 ImGui.TableNextColumn();
                                 if (config.CheckPathKeywordPresence && config.ImportantKeywords.Any(keyword => file.FileInfo.FullName.Contains(keyword.ToLower())))
                                 {
-                                    ImGui.TextColored((Vector4)Color.Violet, "[KeywordInPath]");
+                                    ImGui.TextColored((Vector4)Color.BlueViolet, "[KeywordInPath]");
+                                    ImGui.SameLine();
+                                }
+
+                                if (config.CheckColumnKeywordPresence && file.ColumnKeywordIsPresence is true)
+                                {
+                                    ImGui.TextColored((Vector4)Color.RoyalBlue, "[KeywordInColumn]");
                                     ImGui.SameLine();
                                 }
 

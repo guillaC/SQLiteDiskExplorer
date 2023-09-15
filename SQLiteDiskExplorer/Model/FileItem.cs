@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SQLiteDiskExplorer.Model
+﻿namespace SQLiteDiskExplorer.Model
 {
     public class FileItem
     {
@@ -14,7 +8,6 @@ namespace SQLiteDiskExplorer.Model
         public bool? PathKeywordIsPresence { get; set; }
         public bool? ColumnKeywordIsPresence { get; set; }
 
-        
         public FileItem(FileInfo fileInfo, SQLiteFileHeader? fileHeader, string tempPath = "", bool? pathKeywordIsPresence = null, bool? columnKeywordIsPresence = null)
         {
             FileInfo = fileInfo;

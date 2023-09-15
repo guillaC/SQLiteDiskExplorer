@@ -1,7 +1,4 @@
-﻿using ImGuiNET;
-using System.Text;
-
-namespace SQLiteDiskExplorer.Model
+﻿namespace SQLiteDiskExplorer.Model
 {
     public class SQLiteFileHeader //https://www.sqlite.org/fileformat.html
     {

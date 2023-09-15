@@ -1,7 +1,6 @@
 ﻿using ImGuiNET;
 using SQLiteDiskExplorer.Model;
 using SQLiteDiskExplorer.Utils;
-using System.Numerics;
 
 namespace SQLiteDiskExplorer.UI
 {
@@ -36,12 +35,10 @@ namespace SQLiteDiskExplorer.UI
             config.RecurseSubdirectories = ShowCheckboxAndGetUpdatedValue(config.RecurseSubdirectories, "Scan Subdirectories");
             config.IgnoreInaccessible = ShowCheckboxAndGetUpdatedValue(config.IgnoreInaccessible, "Ignore Inaccessible Files");
             Front.HelpMarker("Stops analysis when access is denied.");
-            config.CopyToTempIfOpnInAnotherProcess = ShowCheckboxAndGetUpdatedValue(config.CopyToTempIfOpnInAnotherProcess, "Copy to Temp Directory if File Open in Another Process");
-            Front.HelpMarker("If a file is being used by another process, accessing its content is possible through a copy.\nThe application will create copies in the TEMP directory during the scan.\nThese files will be highlighted in reports (yellow font).");
             config.CheckPathKeywordPresence = ShowCheckboxAndGetUpdatedValue(config.CheckPathKeywordPresence, "Check Keyword in File Path");
             Front.HelpMarker("Checks if any of the right words exist in a file path.\nThese files will be highlighted in reports (pink font).");
             config.CheckColumnKeywordPresence = ShowCheckboxAndGetUpdatedValue(config.CheckColumnKeywordPresence, "Check Keyword in Columns");
-            Front.HelpMarker("Checks if any of the right words exist in any columns of SQLite files.\nThese files will be highlighted in reports (red font).");
+            Front.HelpMarker("Checks if any of the right words exist in any columns of SQLite files.\nThese files will be highlighted in reports (blue font).");
             ImGui.EndGroup();
             ImGui.SameLine();
             ImGui.BeginGroup();

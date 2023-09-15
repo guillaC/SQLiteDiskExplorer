@@ -1,9 +1,6 @@
 ﻿using SQLiteDiskExplorer.Model;
 using SQLiteDiskExplorer.Utils;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-
 
 namespace SQLiteDiskExplorer.Core
 {
@@ -13,6 +10,7 @@ namespace SQLiteDiskExplorer.Core
         public State WorkerState = State.Waiting;
 
         EnumerationOptions options;
+        AppConfig config;
 
         private List<string> paths = new();
         private readonly List<FileItem> result = new();
@@ -65,6 +63,7 @@ namespace SQLiteDiskExplorer.Core
                     if (IsSQLiteFile(file))
                     {
                         FileItem fItem = new(new FileInfo(file), GetHeader(file));
+                        fItem.ColumnKeywordIsPresence = (config.CheckColumnKeywordPresence && IdentifyTermInColumn(fItem));
 
                         lock (lockObject)
                         {
@@ -92,7 +91,7 @@ namespace SQLiteDiskExplorer.Core
 
         private void LoadConfigVar()
         {
-            AppConfig config = ConfigurationManager.LoadConfiguration();
+            config = ConfigurationManager.LoadConfiguration();
 
             options = new EnumerationOptions()
             {
@@ -126,20 +125,18 @@ namespace SQLiteDiskExplorer.Core
 
             try
             {
-                using (FileStream stream = new FileStream(file, FileMode.Open, FileAccess.Read))
+                using (FileStream stream = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
                     stream.Read(header, 0, 16);
                 }
+                string headerText = Encoding.UTF8.GetString(header);
+                return headerText.StartsWith("SQLite format");
             }
             catch (Exception ex)
             {
-                Console.WriteLine(file);
-                Console.WriteLine(ex.Message);
-                return false;
+                Console.WriteLine($"{ex.Message} ");
             }
-
-            string headerText = Encoding.UTF8.GetString(header);
-            return headerText.StartsWith("SQLite format");
+            return false;
         }
 
         private static SQLiteFileHeader? GetHeader(string file)
@@ -161,6 +158,12 @@ namespace SQLiteDiskExplorer.Core
             }
 
             return new SQLiteFileHeader(header);
+        }
+
+        private static bool IdentifyTermInColumn(FileItem fItem)
+        {
+            //TODO
+            return false;
         }
     }
 }
