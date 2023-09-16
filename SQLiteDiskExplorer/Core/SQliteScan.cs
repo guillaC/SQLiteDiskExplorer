@@ -129,8 +129,8 @@ namespace SQLiteDiskExplorer.Core
         }
 
         /// <summary>
-        /// Impossible d'utiliser SearchOption.AllDirectories et EnumerationOptions.IgnoreInaccessible en même temps dans la méthode Directory.EnumerateFiles de .NET. 
-        /// De fait, obliger de faire de faire sa propre méthode d'enum de fichier pour pouvoir accéder aux répertoires spéciaux (comme APPDATA exclut par défaut de la méthode Directory.EnumerateFiles.
+        /// Il n'est pas possible d'utiliser SearchOption.AllDirectories et EnumerationOptions.IgnoreInaccessible simultanément dans la méthode Directory.EnumerateFiles de .NET. 
+        /// Il faut donc utiliser cette méthode custom pour l'énumération des fichiers pour accéder aux répertoires spéciaux (comme APPDATA, qui est exclu par défaut de la méthode Directory.EnumerateFiles).
         /// </summary>
         static List<string> CustomEnumerateFiles(string directory)
         {
