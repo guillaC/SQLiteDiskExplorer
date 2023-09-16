@@ -107,9 +107,18 @@ namespace SQLiteDiskExplorer.Core
             WorkerState = State.Enumerating;
             try
             {
-                paths = Directory.EnumerateFiles(drive.Name, "*", options).ToList();
-                Console.WriteLine($"Done. {paths.Count()}");
-                totalNbFiles = paths.Count();
+                if (options.RecurseSubdirectories && options.IgnoreInaccessible)
+                {
+                    Console.WriteLine(SearchOption.AllDirectories);
+                    paths = CustomEnumerateFiles(drive.Name);
+                }
+                else
+                {
+                    Console.WriteLine(options.ToString());
+                    paths = Directory.EnumerateFiles(drive.Name, "*", options).ToList();
+                }
+                Console.WriteLine($"Done. {paths.Count}");
+                totalNbFiles = paths.Count;
                 ScanFiles();
             }
             catch (Exception ex)
@@ -117,6 +126,34 @@ namespace SQLiteDiskExplorer.Core
                 Console.WriteLine($"Error enumerating files: {ex.Message}");
                 WorkerState = State.Error;
             }
+        }
+
+        /// <summary>
+        /// Impossible d'utiliser SearchOption.AllDirectories et EnumerationOptions.IgnoreInaccessible en même temps dans la méthode Directory.EnumerateFiles de .NET. 
+        /// De fait, obliger de faire de faire sa propre méthode d'enum de fichier pour pouvoir accéder aux répertoires spéciaux (comme APPDATA exclut par défaut de la méthode Directory.EnumerateFiles.
+        /// </summary>
+        static List<string> CustomEnumerateFiles(string directory)
+        {
+            List<string> fileList = new List<string>();
+
+            try
+            {
+                IEnumerable<string> files = Directory.EnumerateFiles(directory, "*.*");
+                fileList.AddRange(files);
+
+                IEnumerable<string> subDirectories = Directory.EnumerateDirectories(directory);
+                foreach (string subDir in subDirectories)
+                {
+                    List<string> subdirectoryFiles = CustomEnumerateFiles(subDir);
+                    fileList.AddRange(subdirectoryFiles);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            return fileList;
         }
 
         private static bool IsSQLiteFile(string file)
