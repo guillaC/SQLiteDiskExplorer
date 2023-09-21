@@ -1,18 +1,21 @@
-﻿using Microsoft.Data.Sqlite;
-using SQLiteDiskExplorer.Model.Schema;
+﻿using SQLiteDiskExplorer.Model.Schema;
 using System.Data;
+using System.Data.SQLite;
+
 
 namespace SQLiteDiskExplorer.Core
 {
     public class SQLiteReader
     {
-        private readonly SqliteConnection Connection;
+        private readonly SQLiteConnection Connection;
         public List<Table> Schema = new();
 
-        public SQLiteReader(SqliteConnection file)
+        public SQLiteReader(string fileName)
         {
-            Connection = new SqliteConnection($"Data Source={file};Version=3;");
+            Console.WriteLine($"READING {fileName}");
+            Connection = new SQLiteConnection($"Data Source={fileName}");
             LoadTableStructure();
+            WritlnTables(Schema);
         }
 
         public List<Table> LoadTableStructure()
@@ -50,7 +53,7 @@ namespace SQLiteDiskExplorer.Core
                 string columnName = schemaRow["COLUMN_NAME"]?.ToString() ?? "";
                 if (!string.IsNullOrWhiteSpace(columnName))
                 {
-                    Column column = new Column
+                    Column column = new()
                     {
                         Name = columnName,
                         DataType = schemaRow["DATA_TYPE"]?.ToString() ?? "",
@@ -63,6 +66,15 @@ namespace SQLiteDiskExplorer.Core
             }
 
             return columns;
+        }
+
+        public static void WritlnTables(List<Table> tables)
+        {
+            foreach (var table in tables)
+            {
+                string columnNames = string.Join(", ", table.Columns.Select(c => c.Name));
+                Console.WriteLine($"Table Name: {table.TableName}, Columns: {columnNames}");
+            }
         }
     }
 }

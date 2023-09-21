@@ -4,5 +4,5 @@
   "CheckPathKeywordPresence": true,
   "CheckColumnKeywordPresence": true,
   "CopyToTempIfOpnInAnotherProcess": true,
-  "ImportantKeywords": [ "tor", "test", "sqlite" ]
+  "ImportantKeywords": [ "login", "pass", "mail" ]
 }

@@ -15,8 +15,8 @@
   <ItemGroup>
     <PackageReference Include="ClickableTransparentOverlay" Version="9.0.0" />
     <PackageReference Include="ImGui.NET" Version="1.89.9.1" />
-    <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="7.0.11" />
     <PackageReference Include="SixLabors.ImageSharp" Version="3.0.2" />
+    <PackageReference Include="System.Data.SQLite" Version="1.0.118" />
     <PackageReference Include="Veldrid.ImGui" Version="5.72.0" />
     <PackageReference Include="Vortice.D3DCompiler" Version="3.2.0" />
     <PackageReference Include="Vortice.Direct3D11" Version="3.2.0" />

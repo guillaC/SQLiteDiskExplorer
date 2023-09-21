@@ -1,4 +1,5 @@
 ﻿using SQLiteDiskExplorer.Model;
+using SQLiteDiskExplorer.Model.Schema;
 using SQLiteDiskExplorer.Utils;
 using System.Text;
 
@@ -63,7 +64,8 @@ namespace SQLiteDiskExplorer.Core
                     if (IsSQLiteFile(file))
                     {
                         FileItem fItem = new(new FileInfo(file), GetHeader(file));
-                        fItem.ColumnKeywordIsPresence = (config.CheckColumnKeywordPresence && IdentifyTermInColumn(fItem));
+
+                        if (config.CheckColumnKeywordPresence) fItem.ColumnKeywordIsPresence = IdentifyTermInColumn(fItem);
 
                         lock (lockObject)
                         {
@@ -197,9 +199,15 @@ namespace SQLiteDiskExplorer.Core
             return new SQLiteFileHeader(header);
         }
 
-        private static bool IdentifyTermInColumn(FileItem fItem)
+        private bool IdentifyTermInColumn(FileItem fItem)
         {
-            //TODO
+            SQLiteReader tmpReader = new(fItem.FileInfo.FullName);
+
+            foreach (var term in config.ImportantKeywords)
+            {
+                if (tmpReader.Schema.Any(table => table.Columns.Any(column => column.Name.Contains(term, StringComparison.OrdinalIgnoreCase)))) return true;
+            }
+
             return false;
         }
     }

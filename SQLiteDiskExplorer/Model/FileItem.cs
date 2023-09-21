@@ -5,10 +5,10 @@
         public FileInfo FileInfo { get; set; }
         public SQLiteFileHeader? FileHeader { get; set; }
         public string TempPath { get; set; } = string.Empty;
-        public bool? PathKeywordIsPresence { get; set; }
-        public bool? ColumnKeywordIsPresence { get; set; }
+        public bool PathKeywordIsPresence { get; set; }
+        public bool ColumnKeywordIsPresence { get; set; }
 
-        public FileItem(FileInfo fileInfo, SQLiteFileHeader? fileHeader, string tempPath = "", bool? pathKeywordIsPresence = null, bool? columnKeywordIsPresence = null)
+        public FileItem(FileInfo fileInfo, SQLiteFileHeader? fileHeader, string tempPath = "", bool pathKeywordIsPresence = false, bool columnKeywordIsPresence = false)
         {
             FileInfo = fileInfo;
             FileHeader = fileHeader;
