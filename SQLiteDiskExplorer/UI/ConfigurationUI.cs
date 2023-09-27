@@ -20,7 +20,7 @@ namespace SQLiteDiskExplorer.UI
 
             if (firstLoad)
             {
-                config = ConfigurationManager.LoadConfiguration();
+                config = ConfigurationManager.LoadConfiguration()!;
                 firstLoad = !firstLoad;
             }
 
@@ -58,7 +58,10 @@ namespace SQLiteDiskExplorer.UI
             ImGui.SameLine();
             if (ImGui.Button("Remove"))
             {
-                config.ImportantKeywords.Remove(config.ImportantKeywords[selectedLbID]);
+                if (selectedLbID >= 0 && selectedLbID < config.ImportantKeywords.Count)
+                {
+                    config.ImportantKeywords.Remove(config.ImportantKeywords[selectedLbID]);
+                }
             }
             ImGui.EndGroup();
         }

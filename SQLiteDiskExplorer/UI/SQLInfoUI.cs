@@ -26,7 +26,6 @@ namespace SQLiteDiskExplorer.UI
                 ImGui.SetWindowSize(new Vector2(350, 400));
             }
 
-
             if (ImGui.BeginTabBar("ControlTabs", ImGuiTabBarFlags.None))
             {
                 if (ImGui.BeginTabItem("File Info"))
@@ -34,6 +33,7 @@ namespace SQLiteDiskExplorer.UI
                     ImGui.Text("Woow");
                     ImGui.EndTabItem();
                 }
+
                 if (ImGui.BeginTabItem("Header"))
                 {
                     ShowHex(sqlFileItem.FileHeader.Header);

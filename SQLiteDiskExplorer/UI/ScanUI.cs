@@ -20,7 +20,7 @@ namespace SQLiteDiskExplorer.UI
 
         public ScanUI(List<DriveInfo> pSelectedDrive)
         {
-            config = ConfigurationManager.LoadConfiguration();
+            config = ConfigurationManager.LoadConfiguration()!;
 
             foreach (string ze in config.ImportantKeywords)
             {
@@ -53,7 +53,7 @@ namespace SQLiteDiskExplorer.UI
 
         private void ApplyStyle()
         {
-            ImGui.PushStyleColor(ImGuiCol.PlotHistogram, (Vector4)Color.Violet);
+            ImGui.PushStyleColor(ImGuiCol.PlotHistogram, (Vector4)Color.CadetBlue);
         }
 
         private void ShowProgress()

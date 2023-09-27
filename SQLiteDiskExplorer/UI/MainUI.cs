@@ -78,7 +78,6 @@ namespace SQLiteDiskExplorer.UI
 
         private void ShowHeader()
         {
-
             ImGui.BeginChild("ChildImg", new Vector2(100, 100));
             ImGui.Image(imageHandle, new Vector2(100, 100));
             ImGui.EndChild();
@@ -153,6 +152,7 @@ namespace SQLiteDiskExplorer.UI
         private void InitializeSelectedDriveList()
         {
             drives = Drive.GetDrives();
+            var device = Device.GetDevices();
             selectedDrive = new bool[drives.Count()];
         }
     }

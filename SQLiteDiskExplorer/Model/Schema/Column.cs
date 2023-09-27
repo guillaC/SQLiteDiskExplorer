@@ -9,10 +9,9 @@ namespace SQLiteDiskExplorer.Model.Schema
 
     public class Column
     {
-        public required string Name { get; set; }
-        public required string DataType { get; set; }
-        public string? Constraint { get; set; }
+        public string Name { get; set; }
+        public string? DataType { get; set; }
         public ForeignKeyInfo? ForeignKey { get; set; }
-        public required bool IsPrimary { get; set; }
+        public bool IsPrimary { get; set; }
     }
 }

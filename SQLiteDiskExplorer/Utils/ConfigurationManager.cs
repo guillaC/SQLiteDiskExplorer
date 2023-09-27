@@ -9,10 +9,10 @@ namespace SQLiteDiskExplorer.Utils
 
         public static AppConfig? LoadConfiguration()
         {
-
+            AppConfig? tempConfig;
             if (!File.Exists(PATH))
             {
-                AppConfig config = new()
+                tempConfig = new()
                 {
                     CheckColumnKeywordPresence = true,
                     CheckPathKeywordPresence = true,
@@ -20,12 +20,12 @@ namespace SQLiteDiskExplorer.Utils
                     RecurseSubdirectories = true,
                     ImportantKeywords = new()
                 };
-                SaveConfiguration(config);
+                SaveConfiguration(tempConfig);
+                return tempConfig;
             }
 
-
             string json = File.ReadAllText(PATH);
-            AppConfig result = JsonSerializer.Deserialize<AppConfig>(json);
+            AppConfig result = JsonSerializer.Deserialize<AppConfig>(json)!;
             result.ImportantKeywords = result.ImportantKeywords.ConvertAll(d => d.ToLower());
             return result;
 
