@@ -5,16 +5,14 @@
         public FileInfo FileInfo { get; set; }
         public SQLiteFileHeader? FileHeader { get; set; }
         public string TempPath { get; set; } = string.Empty;
-        public bool PathKeywordIsPresence { get; set; }
-        public bool ColumnKeywordIsPresence { get; set; }
+        public Dictionary<string, List<string>>? ColumnKeywordPresence { get; set; } // KeyWord, full column name
 
-        public FileItem(FileInfo fileInfo, SQLiteFileHeader? fileHeader, string tempPath = "", bool pathKeywordIsPresence = false, bool columnKeywordIsPresence = false)
+        public FileItem(FileInfo fileInfo, SQLiteFileHeader? fileHeader, string tempPath = "", Dictionary<string, List<string>>? columnKeywordIsPresence = null)
         {
             FileInfo = fileInfo;
             FileHeader = fileHeader;
             TempPath = tempPath;
-            PathKeywordIsPresence = pathKeywordIsPresence;
-            ColumnKeywordIsPresence = columnKeywordIsPresence;
+            ColumnKeywordPresence = columnKeywordIsPresence;
         }
     }
 }

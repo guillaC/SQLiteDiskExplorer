@@ -48,7 +48,7 @@ namespace SQLiteDiskExplorer.Core
 
         public float GetScanProgress()
         {
-            if (totalNbFiles == 0) return 0.0f;
+            if (WorkerState == State.Done) return 1.0f;
             return (float)Math.Round((double)totalProcessedFiles / totalNbFiles, 2);
         }
 
@@ -65,7 +65,7 @@ namespace SQLiteDiskExplorer.Core
                     {
                         FileItem fItem = new(new FileInfo(file), GetHeader(file));
 
-                        if (config.CheckColumnKeywordPresence) fItem.ColumnKeywordIsPresence = IdentifyTermInColumn(fItem);
+                        if (config.CheckColumnKeywordPresence) fItem.ColumnKeywordPresence = IdentifyTermInColumn(fItem);
 
                         lock (lockObject)
                         {
@@ -199,16 +199,39 @@ namespace SQLiteDiskExplorer.Core
             return new SQLiteFileHeader(header);
         }
 
-        private bool IdentifyTermInColumn(FileItem fItem)
+        private Dictionary<string,List<string>> IdentifyTermInColumn(FileItem fItem)
         {
             SQLiteReader tmpReader = new(fItem.FileInfo.FullName);
+            Dictionary<string, List<string>> result = new();
 
+            /*
             foreach (var term in config.ImportantKeywords)
             {
                 if (tmpReader.Schema.Any(table => table.Columns.Any(column => column.Name.Contains(term, StringComparison.OrdinalIgnoreCase)))) return true;
             }
+            */
 
-            return false;
+            foreach (var term in config.ImportantKeywords)
+            {
+                foreach (var table in tmpReader.Schema)
+                {
+                    foreach (var column in table.Columns)
+                    {
+                        if (column.Name.Contains(term, StringComparison.OrdinalIgnoreCase))
+                        {
+                            if (result.ContainsKey(term))
+                            {
+                                result[term].Add(column.Name);
+                            } else
+                            {
+                                result[term] = new List<string>() { column.Name };
+                            }
+                        }
+                    }
+                }
+            }
+
+            return result;
         }
     }
 }

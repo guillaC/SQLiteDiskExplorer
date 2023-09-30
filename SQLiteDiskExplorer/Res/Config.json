@@ -1,8 +1,8 @@
 ﻿{
   "IgnoreInaccessible": true,
-  "RecurseSubdirectories": true,
+  "RecurseSubdirectories": false,
   "CheckPathKeywordPresence": true,
   "CheckColumnKeywordPresence": true,
   "CopyToTempIfOpnInAnotherProcess": true,
-  "ImportantKeywords": [ "login", "pass", "mail" ]
+  "ImportantKeywords": [ "login", "pass", "mail", "name" ]
 }

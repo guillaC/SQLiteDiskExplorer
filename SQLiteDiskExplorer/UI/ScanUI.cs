@@ -37,7 +37,7 @@ namespace SQLiteDiskExplorer.UI
         public void Show()
         {
             if (!isOpen) return;
-            ImGui.Begin("Analysis", ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.AlwaysAutoResize);
+            ImGui.Begin("Analysis", ImGuiWindowFlags.NoCollapse);
             if (firstLoad)
             {
                 ApplyStyle();
@@ -53,6 +53,7 @@ namespace SQLiteDiskExplorer.UI
 
         private void ApplyStyle()
         {
+            ImGui.SetWindowSize(new Vector2(1500, 700));
             ImGui.PushStyleColor(ImGuiCol.PlotHistogram, (Vector4)Color.CadetBlue);
         }
 
@@ -61,7 +62,7 @@ namespace SQLiteDiskExplorer.UI
             ImGui.SeparatorText("Progress");
             foreach (var worker in Workers)
             {
-                ImGui.ProgressBar(worker.Value.GetScanProgress(), new System.Numerics.Vector2(450, 20), $"{worker.Value.WorkerState}");
+                ImGui.ProgressBar(worker.Value.GetScanProgress(), new Vector2(450, 20), $"{worker.Value.WorkerState}");
             }
         }
 
@@ -115,10 +116,10 @@ namespace SQLiteDiskExplorer.UI
                     if (ImGui.BeginTabItem(drive.Name))
                     {
                         ImGui.SeparatorText("Result");
-                        if (ImGui.BeginChild($"Result {drive.Name}", new System.Numerics.Vector2(1200, 650)))
+                        if (ImGui.BeginChild($"Result {drive.Name}"))
                         {
                             ImGui.BeginTable("Files", 4, ImGuiTableFlags.Resizable | ImGuiTableFlags.NoSavedSettings | ImGuiTableFlags.Borders);
-                            ImGui.TableSetupColumn("Name", ImGuiTableColumnFlags.NoResize, 0.65f);
+                            ImGui.TableSetupColumn("Name", ImGuiTableColumnFlags.None, 0.65f);
                             ImGui.TableSetupColumn("Date", ImGuiTableColumnFlags.NoResize, 0.15f);
                             ImGui.TableSetupColumn("Size", ImGuiTableColumnFlags.NoResize, 0.07f);
                             ImGui.TableSetupColumn("Action", ImGuiTableColumnFlags.NoResize, 0.13f);
@@ -132,10 +133,17 @@ namespace SQLiteDiskExplorer.UI
                                     ImGui.SameLine();
                                 }
 
-                                if (config.CheckColumnKeywordPresence && file.ColumnKeywordIsPresence is true)
+                                if (config.CheckColumnKeywordPresence && (file.ColumnKeywordPresence is not null && file.ColumnKeywordPresence.Any()))
                                 {
-                                    ImGui.TextColored((Vector4)Color.RoyalBlue, "[KeywordInColumn]");
-                                    ImGui.SameLine();
+                                    foreach (KeyValuePair<string, List<string>> found in file.ColumnKeywordPresence)
+                                    {
+                                        ImGui.TextColored((Vector4)Color.RoyalBlue, $"[KeywordInColumn({found.Key})]");
+                                        if (ImGui.IsItemHovered())
+                                        {
+                                            ImGui.SetTooltip($" {String.Join(",", found.Value)}");
+                                        }
+                                        ImGui.SameLine();
+                                    }
                                 }
 
                                 ImGui.Text(file.FileInfo.FullName);
@@ -144,7 +152,7 @@ namespace SQLiteDiskExplorer.UI
                                 ImGui.TableNextColumn();
                                 ImGui.Text(Drive.FormatSize(file.FileInfo.Length));
                                 ImGui.TableNextColumn();
-                                
+
                                 ImGui.PushID($"Information#{file.FileInfo.FullName}");
 
                                 if (ImGui.SmallButton("Information"))

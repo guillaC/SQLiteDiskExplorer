@@ -1,6 +1,8 @@
 ﻿using ImGuiNET;
 using SQLiteDiskExplorer.Model;
+using SQLiteDiskExplorer.Utils;
 using System.Numerics;
+using Vulkan;
 
 namespace SQLiteDiskExplorer.UI
 {
@@ -36,7 +38,14 @@ namespace SQLiteDiskExplorer.UI
 
                 if (ImGui.BeginTabItem("Header"))
                 {
-                    ShowHex(sqlFileItem.FileHeader.Header);
+                    if (sqlFileItem.FileHeader is not null)
+                    {
+                        Front.ShowHex(sqlFileItem.FileHeader.Header);
+                    }
+                    else
+                    {
+                        ImGui.Text("Something went wrong");
+                    }
 
                     /*
                     ImGui.Text($"Header=header                                 : {sqlFileItem.FileHeader.Header}");
@@ -69,39 +78,7 @@ namespace SQLiteDiskExplorer.UI
             ImGui.End();
         }
 
-        public void ShowHex(byte[] data)
-        {
-            ImGui.BeginTable("Hex", 16, ImGuiTableFlags.Resizable | ImGuiTableFlags.NoSavedSettings | ImGuiTableFlags.Borders);
 
-            for (int i = 0; i <= 0xF; i++)
-            {
-                ImGui.TableSetupColumn(" " + i.ToString("X"), ImGuiTableColumnFlags.NoResize);
-            }
-
-            ImGui.TableHeadersRow();
-
-            int valuesPerRow = 16;
-
-            for (int i = 0; i < data.Length; i += valuesPerRow)
-            {
-                ImGui.TableNextRow();
-                for (int j = 0; j < valuesPerRow; j++)
-                {
-                    ImGui.TableNextColumn();
-                    int index = i + j;
-                    if (index < data.Length)
-                    {
-                        ImGui.Text(data[index].ToString("X2"));
-                    }
-                    else
-                    {
-                        ImGui.Text("");
-                    }
-                }
-            }
-
-            ImGui.EndTable();
-        }
 
         public void ShowActions()
         {
