@@ -13,8 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="ClickableTransparentOverlay" Version="9.0.0" />
-    <PackageReference Include="ImGui.NET" Version="1.89.9.1" />
+    <PackageReference Include="ClickableTransparentOverlay" Version="9.0.1" />
+    <PackageReference Include="ImGui.NET" Version="1.89.9.2" />
     <PackageReference Include="MediaDevices" Version="1.10.0" />
     <PackageReference Include="SixLabors.ImageSharp" Version="3.0.2" />
     <PackageReference Include="System.Data.SQLite" Version="1.0.118" />

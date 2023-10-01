@@ -2,7 +2,6 @@
 using SQLiteDiskExplorer.Model;
 using SQLiteDiskExplorer.Utils;
 using System.Numerics;
-using Vulkan;
 
 namespace SQLiteDiskExplorer.UI
 {
@@ -10,7 +9,7 @@ namespace SQLiteDiskExplorer.UI
     {
         bool firstLoad = true;
         bool isOpen = true;
-        FileItem sqlFileItem;
+        readonly FileItem sqlFileItem;
 
         public SQLInfoUI(FileItem sqlItem)
         {
@@ -32,9 +31,41 @@ namespace SQLiteDiskExplorer.UI
             {
                 if (ImGui.BeginTabItem("File Info"))
                 {
-                    ImGui.Text("Woow");
+                    ImGui.Text("File Info");
                     ImGui.EndTabItem();
                 }
+
+                if (ImGui.BeginTabItem("Data"))
+                {
+                    ImGui.Text("Date");
+                    ImGui.EndTabItem();
+                }
+
+                if (ImGui.BeginTabItem("Query"))
+                {
+                    ImGui.Text("Query");
+                    ImGui.EndTabItem();
+                }
+
+                /*
+                if (ImGui.BeginTabItem("Structure"))
+                {
+                    imnodes.BeginNodeEditor();
+                    imnodes.BeginNode(1);
+                    imnodes.BeginInputAttribute(2);
+                    ImGui.Text("input");
+                    imnodes.EndInputAttribute();
+                    imnodes.BeginOutputAttribute(3);
+                    ImGui.Indent(40);  // Push the text label to the right side.
+                                        // At the moment UI elements dont't get
+                                        // aligned automatically within the nodes.
+                    ImGui.Text("output");
+                    imnodes.EndOutputAttribute();
+                    imnodes.EndNode();
+                    imnodes.EndNodeEditor();
+                    ImGui.EndTabItem();
+                }
+                */
 
                 if (ImGui.BeginTabItem("Header"))
                 {
@@ -68,7 +99,6 @@ namespace SQLiteDiskExplorer.UI
                 }
             }
 
-
             ImGui.SetCursorPosX(ImGui.GetWindowSize().X - 45);
             if (ImGui.Button("Exit"))
             {
@@ -77,8 +107,6 @@ namespace SQLiteDiskExplorer.UI
 
             ImGui.End();
         }
-
-
 
         public void ShowActions()
         {

@@ -13,10 +13,9 @@ namespace SQLiteDiskExplorer.UI
         bool isOpen = true;
         bool cancelProcessing = false;
 
-        Dictionary<DriveInfo, List<FileItem>> DrivePathsMap = new();
-        Dictionary<DriveInfo, SQliteScan> Workers = new();
-
-        AppConfig config;
+        readonly AppConfig config;
+        readonly Dictionary<DriveInfo, List<FileItem>> DrivePathsMap = new();
+        readonly Dictionary<DriveInfo, SQliteScan> Workers = new();
 
         public ScanUI(List<DriveInfo> pSelectedDrive)
         {
@@ -155,19 +154,12 @@ namespace SQLiteDiskExplorer.UI
 
                                 ImGui.PushID($"Information#{file.FileInfo.FullName}");
 
-                                if (ImGui.SmallButton("Information"))
-                                {
-                                    Console.WriteLine("Information");
-                                    RenderControllerClass.infoForm = new SQLInfoUI(file);
-                                }
-                                ImGui.SameLine();
                                 if (ImGui.SmallButton("Open"))
                                 {
-                                    Console.WriteLine("Open");
+                                    RenderControllerClass.infoForm = new SQLInfoUI(file);
                                 }
 
                                 ImGui.PopID();
-
                                 ImGui.TableNextRow();
                             }
                             ImGui.EndTable();

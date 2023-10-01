@@ -16,8 +16,8 @@ namespace SQLiteDiskExplorer.Core
         private List<string> paths = new();
         private readonly List<FileItem> result = new();
 
-        private readonly object lockObject = new object();
-        private readonly CancellationTokenSource cancellationTkn = new CancellationTokenSource();
+        private readonly object lockObject = new();
+        private readonly CancellationTokenSource cancellationTkn = new();
 
         private int totalNbFiles, totalProcessedFiles = 0;
 
@@ -57,7 +57,7 @@ namespace SQLiteDiskExplorer.Core
             Console.WriteLine("Scanning...");
             WorkerState = State.Scanning;
 
-            Console.WriteLine($"{paths.Count()} files to scan");
+            Console.WriteLine($"{paths.Count} files to scan");
             Parallel.ForEach(paths, (file, parallelLoop) =>
                 {
                     totalProcessedFiles++;
@@ -136,7 +136,7 @@ namespace SQLiteDiskExplorer.Core
         /// </summary>
         static List<string> CustomEnumerateFiles(string directory)
         {
-            List<string> fileList = new List<string>();
+            List<string> fileList = new();
 
             try
             {
@@ -164,7 +164,7 @@ namespace SQLiteDiskExplorer.Core
 
             try
             {
-                using (FileStream stream = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                using (FileStream stream = new(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
                     stream.Read(header, 0, 16);
                 }
@@ -184,10 +184,8 @@ namespace SQLiteDiskExplorer.Core
 
             try
             {
-                using (FileStream stream = new FileStream(file, FileMode.Open, FileAccess.Read))
-                {
-                    stream.Read(header, 0, 100);
-                }
+                using FileStream stream = new(file, FileMode.Open, FileAccess.Read);
+                stream.Read(header, 0, 100);
             }
             catch (Exception ex)
             {
@@ -199,7 +197,7 @@ namespace SQLiteDiskExplorer.Core
             return new SQLiteFileHeader(header);
         }
 
-        private Dictionary<string,List<string>> IdentifyTermInColumn(FileItem fItem)
+        private Dictionary<string, List<string>> IdentifyTermInColumn(FileItem fItem)
         {
             SQLiteReader tmpReader = new(fItem.FileInfo.FullName);
             Dictionary<string, List<string>> result = new();
@@ -219,10 +217,11 @@ namespace SQLiteDiskExplorer.Core
                     {
                         if (column.Name.Contains(term, StringComparison.OrdinalIgnoreCase))
                         {
-                            if (result.ContainsKey(term))
+                            if (result.TryGetValue(term, out List<string>? value))
                             {
-                                result[term].Add(column.Name);
-                            } else
+                                value.Add(column.Name);
+                            }
+                            else
                             {
                                 result[term] = new List<string>() { column.Name };
                             }
