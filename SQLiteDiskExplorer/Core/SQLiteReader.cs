@@ -1,5 +1,6 @@
 ﻿using SQLiteDiskExplorer.Model.Schema;
 using System.Data;
+using System.Data.Common;
 using System.Data.SQLite;
 
 
@@ -58,19 +59,33 @@ namespace SQLiteDiskExplorer.Core
         private List<Column> GetTableColumns(string tableName)
         {
             DataTable schemaTable = Connection.GetSchema("Columns", new[] { null, null, tableName });
-            List<Column> columns = new List<Column>();
+
+            List<Column> columns = new();
 
             foreach (DataRow schemaRow in schemaTable.Rows)
             {
                 string columnName = schemaRow["COLUMN_NAME"]?.ToString() ?? "";
-                if (!string.IsNullOrWhiteSpace(columnName))
+                if (string.IsNullOrWhiteSpace(columnName)) continue;
+
+                Column column = new();
+                column.Name = columnName;
+                column.DataType = schemaRow["DATA_TYPE"]?.ToString() ?? "";
+                column.IsPrimary = (bool)schemaRow["PRIMARY_KEY"];
+
+                /* TODO : relations entre les tables
+                if (schemaRow["CONSTRAINT_NAME"] != DBNull.Value && schemaRow["CONSTRAINT_TYPE"]?.ToString() == "FOREIGN KEY")
                 {
-                    Column column = new();
-                    column.Name = columnName;
-                    column.DataType = schemaRow["DATA_TYPE"]?.ToString() ?? "";
-                    column.IsPrimary = (bool)schemaRow["PRIMARY_KEY"];
-                    columns.Add(column);
+                    ForeignKeyInfo foreignKey = new()
+                    {
+                        ReferencedTable = schemaRow["FKEY_TO_TABLE"]?.ToString() ?? "",
+                        ReferencedColumn = schemaRow["FKEY_TO_COLUMN"]?.ToString() ?? ""
+                    };
+
+                    column.ForeignKey = foreignKey;
                 }
+                */
+
+                columns.Add(column);
             }
 
             return columns;

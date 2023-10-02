@@ -3,6 +3,5 @@
   "RecurseSubdirectories": false,
   "CheckPathKeywordPresence": true,
   "CheckColumnKeywordPresence": true,
-  "CopyToTempIfOpnInAnotherProcess": true,
   "ImportantKeywords": [ "login", "pass", "mail", "name" ]
 }

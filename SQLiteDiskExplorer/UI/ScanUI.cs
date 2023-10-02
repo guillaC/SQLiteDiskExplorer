@@ -125,18 +125,22 @@ namespace SQLiteDiskExplorer.UI
                             ImGui.TableHeadersRow();
                             foreach (FileItem file in info.Value)
                             {
-                                ImGui.TableNextColumn();
-                                if (config.CheckPathKeywordPresence && config.ImportantKeywords.Any(keyword => file.FileInfo.FullName.Contains(keyword.ToLower())))
+                                ImGui.TableNextColumn(); 
+                                
+                                foreach (var keyword in config.ImportantKeywords)
                                 {
-                                    ImGui.TextColored((Vector4)Color.BlueViolet, "[KeywordInPath]");
-                                    ImGui.SameLine();
+                                    if (file.FileInfo.FullName.Contains(keyword.ToLower()))
+                                    {
+                                        ImGui.TextColored((Vector4)Color.BlueViolet, $"[{keyword}]");
+                                        ImGui.SameLine();
+                                    }
                                 }
 
                                 if (config.CheckColumnKeywordPresence && (file.ColumnKeywordPresence is not null && file.ColumnKeywordPresence.Any()))
                                 {
                                     foreach (KeyValuePair<string, List<string>> found in file.ColumnKeywordPresence)
                                     {
-                                        ImGui.TextColored((Vector4)Color.RoyalBlue, $"[KeywordInColumn({found.Key})]");
+                                        ImGui.TextColored((Vector4)Color.RoyalBlue, $"[{found.Key}]");
                                         if (ImGui.IsItemHovered())
                                         {
                                             ImGui.SetTooltip($" {String.Join(",", found.Value)}");

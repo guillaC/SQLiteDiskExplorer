@@ -1,5 +1,7 @@
 ﻿using ImGuiNET;
+using SQLiteDiskExplorer.Core;
 using SQLiteDiskExplorer.Model;
+using SQLiteDiskExplorer.Model.Schema;
 using SQLiteDiskExplorer.Utils;
 using System.Numerics;
 
@@ -10,6 +12,9 @@ namespace SQLiteDiskExplorer.UI
         bool firstLoad = true;
         bool isOpen = true;
         readonly FileItem sqlFileItem;
+        private SQLiteReader reader;
+
+        int selectedTable=0;
 
         public SQLInfoUI(FileItem sqlItem)
         {
@@ -19,12 +24,13 @@ namespace SQLiteDiskExplorer.UI
         public void Show()
         {
             if (!isOpen) return;
-            ImGui.Begin("Info", ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize);
+            ImGui.Begin("Info", ImGuiWindowFlags.NoCollapse);
 
             if (firstLoad)
             {
                 firstLoad = !firstLoad;
-                ImGui.SetWindowSize(new Vector2(350, 400));
+                reader = new(sqlFileItem.FileInfo.FullName);
+                ImGui.SetWindowSize(new Vector2(650, 600));
             }
 
             if (ImGui.BeginTabBar("ControlTabs", ImGuiTabBarFlags.None))
@@ -37,7 +43,22 @@ namespace SQLiteDiskExplorer.UI
 
                 if (ImGui.BeginTabItem("Data"))
                 {
-                    ImGui.Text("Date");
+                    ImGui.BeginGroup();
+                    ImGui.BeginListBox("",new(150, ImGui.GetWindowSize().Y-90));
+                    foreach (Table table in reader.Schema)
+                    {
+                        if (ImGui.Selectable(table.TableName))
+                        {
+                            Console.WriteLine(table.TableName);
+                        }
+                    }
+                    ImGui.EndListBox();
+                    ImGui.EndGroup();
+                    ImGui.SameLine();
+                    ImGui.BeginGroup();
+                    ImGui.SeparatorText("Data");
+                    ImGui.Text("Data");
+                    ImGui.EndGroup();
                     ImGui.EndTabItem();
                 }
 
