@@ -107,7 +107,7 @@ namespace SQLiteDiskExplorer.UI
             {
                 ImGui.TableNextRow();
                 ImGui.TableNextColumn();
-                ImGui.Selectable(drive.Name, selectedDrive[driveId], ImGuiSelectableFlags.SpanAllColumns);
+                ImGui.Selectable(drive.Name, selectedDrive![driveId], ImGuiSelectableFlags.SpanAllColumns);
 
                 if (ImGui.IsItemClicked())
                 {
@@ -133,7 +133,7 @@ namespace SQLiteDiskExplorer.UI
             if (ImGui.Button("Process"))
             {
                 List<DriveInfo> selectedDrives = drives.Select((drive, index) => new { Drive = drive, Index = index })
-                                                       .Where(item => selectedDrive[item.Index])
+                                                       .Where(item => selectedDrive![item.Index])
                                                        .Select(item => item.Drive)
                                                        .ToList();
                 RenderControllerClass.scanForm = new ScanUI(selectedDrives);

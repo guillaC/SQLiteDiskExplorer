@@ -3,6 +3,7 @@ using SQLiteDiskExplorer.Core;
 using SQLiteDiskExplorer.Model;
 using SQLiteDiskExplorer.Model.Schema;
 using SQLiteDiskExplorer.Utils;
+using System.Data;
 using System.Numerics;
 
 namespace SQLiteDiskExplorer.UI
@@ -14,7 +15,8 @@ namespace SQLiteDiskExplorer.UI
         readonly FileItem sqlFileItem;
         private SQLiteReader reader;
 
-        int selectedTable=0;
+        Table? selectedTable;
+        List<DataRow> dataOfSelectedTable;
 
         public SQLInfoUI(FileItem sqlItem)
         {
@@ -43,22 +45,7 @@ namespace SQLiteDiskExplorer.UI
 
                 if (ImGui.BeginTabItem("Data"))
                 {
-                    ImGui.BeginGroup();
-                    ImGui.BeginListBox("",new(150, ImGui.GetWindowSize().Y-90));
-                    foreach (Table table in reader.Schema)
-                    {
-                        if (ImGui.Selectable(table.TableName))
-                        {
-                            Console.WriteLine(table.TableName);
-                        }
-                    }
-                    ImGui.EndListBox();
-                    ImGui.EndGroup();
-                    ImGui.SameLine();
-                    ImGui.BeginGroup();
-                    ImGui.SeparatorText("Data");
-                    ImGui.Text("Data");
-                    ImGui.EndGroup();
+                    ShowData();
                     ImGui.EndTabItem();
                 }
 
@@ -69,23 +56,7 @@ namespace SQLiteDiskExplorer.UI
                 }
 
                 /*
-                if (ImGui.BeginTabItem("Structure"))
-                {
-                    imnodes.BeginNodeEditor();
-                    imnodes.BeginNode(1);
-                    imnodes.BeginInputAttribute(2);
-                    ImGui.Text("input");
-                    imnodes.EndInputAttribute();
-                    imnodes.BeginOutputAttribute(3);
-                    ImGui.Indent(40);  // Push the text label to the right side.
-                                        // At the moment UI elements dont't get
-                                        // aligned automatically within the nodes.
-                    ImGui.Text("output");
-                    imnodes.EndOutputAttribute();
-                    imnodes.EndNode();
-                    imnodes.EndNodeEditor();
-                    ImGui.EndTabItem();
-                }
+                if (ImGui.BeginTabItem("Structure")) // Un jour qui sait.
                 */
 
                 if (ImGui.BeginTabItem("Header"))
@@ -99,41 +70,98 @@ namespace SQLiteDiskExplorer.UI
                         ImGui.Text("Something went wrong");
                     }
 
-                    /*
-                    ImGui.Text($"Header=header                                 : {sqlFileItem.FileHeader.Header}");
-                    ImGui.Text($"PageSize=ToUInt16(header,16)                  : {sqlFileItem.FileHeader.PageSize}");
-                    ImGui.Text($"FileFormatWriteVersion=header[18]             : {sqlFileItem.FileHeader.FileFormatWriteVersion}");
-                    ImGui.Text($"FileFormatReadVersion=header[19]              : {sqlFileItem.FileHeader.FileFormatReadVersion}");
-                    ImGui.Text($"FileChangeCounter=ToUInt32(header,24)         : {sqlFileItem.FileHeader.FileChangeCounter}");
-                    ImGui.Text($"DatabaseSizeInPages=ToUInt32(header,28)       : {sqlFileItem.FileHeader.DatabaseSizeInPages}");
-                    ImGui.Text($"FirstFreelistTrunkPage=ToUInt32(header,32)    : {sqlFileItem.FileHeader.FirstFreelistTrunkPage}");
-                    ImGui.Text($"TotalFreelistPages=ToUInt32(header,36)        : {sqlFileItem.FileHeader.TotalFreelistPages}");
-                    ImGui.Text($"SchemaCookie=ToUInt32(header,40)              : {sqlFileItem.FileHeader.SchemaCookie}");
-                    ImGui.Text($"SchemaFormatNumber=ToUInt32(header,44)        : {sqlFileItem.FileHeader.SchemaFormatNumber}");
-                    ImGui.Text($"DefaultPageCacheSize=ToUInt32(header,48)      : {sqlFileItem.FileHeader.DefaultPageCacheSize}");
-                    ImGui.Text($"UserVersion=ToUInt32(header,60)               : {sqlFileItem.FileHeader.UserVersion}");
-                    ImGui.Text($"VersionValidForNumber=ToUInt32(header,92)     : {sqlFileItem.FileHeader.VersionValidForNumber}");
-                    ImGui.Text($"SQLiteVersionNumber=ToUInt32(header,96)       : {sqlFileItem.FileHeader.SQLiteVersionNumber}");
-                    */
-
                     ImGui.EndTabItem();
                 }
-            }
-
-            ImGui.SetCursorPosX(ImGui.GetWindowSize().X - 45);
-            if (ImGui.Button("Exit"))
-            {
-                isOpen = false;
+                ShowActions();
             }
 
             ImGui.End();
         }
 
-        public void ShowActions()
+        private void ShowActions()
         {
+            ImGui.SetCursorPos(new Vector2(ImGui.GetWindowSize().X - 45, ImGui.GetWindowSize().Y - 30));
             if (ImGui.Button("Exit"))
             {
                 isOpen = false;
+            }
+        }
+
+        private void ShowData()
+        {
+            ImGui.BeginGroup();
+            ImGui.BeginListBox("", new(150, ImGui.GetWindowSize().Y - 60));
+            foreach (Table table in reader.Schema)
+            {
+                if (ImGui.Selectable(table.TableName))
+                {
+                    Console.WriteLine(table.TableName);
+                    UpdateTableData(table);
+                }
+            }
+            ImGui.EndListBox();
+            ImGui.EndGroup();
+            ImGui.SameLine();
+            ImGui.BeginGroup();
+            ImGui.SeparatorText("Data");
+
+            if (selectedTable is not null) UpdateTableData(selectedTable);
+            ShowTableData();
+            ImGui.EndGroup();
+        }
+
+        private void UpdateTableData(Table table)
+        {
+            selectedTable = null;
+            dataOfSelectedTable = reader.GetTableData(table);
+        }
+
+        private void ShowTableData()
+        {
+            if (dataOfSelectedTable is not null && dataOfSelectedTable.Count > 0)
+            {
+                ImGui.BeginChild("tableData", new(ImGui.GetWindowSize().X - 170, ImGui.GetWindowSize().Y - 110));
+                ImGui.Columns(dataOfSelectedTable[0].ItemArray.Length);
+                foreach (DataColumn column in dataOfSelectedTable[0].Table.Columns)
+                {
+                    ImGui.Text(column.ColumnName);
+                    ImGui.NextColumn();
+                }
+
+                ImGui.Separator();
+
+                foreach (DataRow row in dataOfSelectedTable)
+                {
+                    foreach (dynamic? cell in row.ItemArray)
+                    {
+                        try
+                        {
+                            if (cell is not null)
+                            {
+                                if (cell is string ||
+                                    cell is int ||
+                                    cell is float ||
+                                    cell is double ||
+                                    cell is Int64)
+                                {
+                                    ImGui.Text(cell.ToString());
+                                }
+                                else
+                                {
+                                    ImGui.Text(cell.ToString());
+                                    Console.WriteLine("Type non géré : " + cell.GetType());
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex);
+                            ImGui.Text("BUG");
+                        }
+                        ImGui.NextColumn();
+                    }
+                }
+                ImGui.EndChild();
             }
         }
     }

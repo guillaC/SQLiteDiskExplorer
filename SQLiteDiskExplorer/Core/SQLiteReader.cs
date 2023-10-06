@@ -2,7 +2,7 @@
 using System.Data;
 using System.Data.Common;
 using System.Data.SQLite;
-
+using System.Linq;
 
 namespace SQLiteDiskExplorer.Core
 {
@@ -16,7 +16,7 @@ namespace SQLiteDiskExplorer.Core
             Console.WriteLine($"READING {fileName}");
             Connection = new SQLiteConnection($"Data Source={fileName}");
             LoadTableStructure();
-            WritlnTables(Schema);
+            //WritlnTables(Schema);
         }
 
         private void LoadTableStructure()
@@ -59,7 +59,6 @@ namespace SQLiteDiskExplorer.Core
         private List<Column> GetTableColumns(string tableName)
         {
             DataTable schemaTable = Connection.GetSchema("Columns", new[] { null, null, tableName });
-
             List<Column> columns = new();
 
             foreach (DataRow schemaRow in schemaTable.Rows)
@@ -67,10 +66,12 @@ namespace SQLiteDiskExplorer.Core
                 string columnName = schemaRow["COLUMN_NAME"]?.ToString() ?? "";
                 if (string.IsNullOrWhiteSpace(columnName)) continue;
 
-                Column column = new();
-                column.Name = columnName;
-                column.DataType = schemaRow["DATA_TYPE"]?.ToString() ?? "";
-                column.IsPrimary = (bool)schemaRow["PRIMARY_KEY"];
+                Column column = new()
+                {
+                    Name = columnName,
+                    DataType = schemaRow["DATA_TYPE"]?.ToString() ?? "",
+                    IsPrimary = (bool)schemaRow["PRIMARY_KEY"]
+                };
 
                 /* TODO : relations entre les tables
                 if (schemaRow["CONSTRAINT_NAME"] != DBNull.Value && schemaRow["CONSTRAINT_TYPE"]?.ToString() == "FOREIGN KEY")
@@ -90,6 +91,32 @@ namespace SQLiteDiskExplorer.Core
 
             return columns;
         }
+
+        public List<DataRow> GetTableData(Table table)
+        {
+            List<DataRow> tableData = new();
+
+            try
+            {
+                Connection.Open();
+                using SQLiteCommand command = new($"SELECT * FROM {table.TableName}", Connection);
+                using SQLiteDataAdapter adapter = new(command);
+                DataTable dataTable = new();
+                adapter.Fill(dataTable);
+                tableData.AddRange(from DataRow row in dataTable.Rows select row);
+            }
+            catch (SQLiteException ex)
+            {
+                Console.WriteLine("pb " + ex.Message);
+            }
+            finally
+            {
+                Connection.Close();
+            }
+
+            return tableData;
+        }
+
 
         private static void WritlnTables(List<Table> tables)
         {

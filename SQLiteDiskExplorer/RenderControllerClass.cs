@@ -7,11 +7,12 @@ namespace SQLiteDiskExplorer
     {
         bool firstLoad = true;
 
-        public static AboutUI aboutForm;
-        public static MainUI mainForm;
-        public static ScanUI scanForm;
-        public static ConfigurationUI configForm;
-        public static SQLInfoUI infoForm;
+        public static AboutUI? aboutForm;
+        public static MainUI? mainForm;
+        public static ScanUI? scanForm;
+        public static ConfigurationUI? configForm;
+        public static SQLInfoUI? infoForm;
+
 
         protected override void Render() // loop
         {
@@ -21,7 +22,7 @@ namespace SQLiteDiskExplorer
                 firstLoad = !firstLoad;
             }
 
-            mainForm.Show();
+            mainForm!.Show();
 
             if (aboutForm != null) aboutForm.Show();
             if (scanForm != null) scanForm.Show();
