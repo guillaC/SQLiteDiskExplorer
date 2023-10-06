@@ -2,7 +2,6 @@
 using SQLiteDiskExplorer.Core;
 using SQLiteDiskExplorer.Model;
 using SQLiteDiskExplorer.Utils;
-using System.Data.Common;
 using System.Numerics;
 
 namespace SQLiteDiskExplorer.UI
@@ -39,7 +38,8 @@ namespace SQLiteDiskExplorer.UI
             ImGui.Begin("Analysis", ImGuiWindowFlags.NoCollapse);
             if (firstLoad)
             {
-                ApplyStyle();
+                ImGui.SetWindowSize(new Vector2(1500, 700));
+                ImGui.PushStyleColor(ImGuiCol.PlotHistogram, (Vector4)Color.CadetBlue);
                 firstLoad = !firstLoad;
             }
 
@@ -50,11 +50,6 @@ namespace SQLiteDiskExplorer.UI
             ImGui.End();
         }
 
-        private void ApplyStyle()
-        {
-            ImGui.SetWindowSize(new Vector2(1500, 700));
-            ImGui.PushStyleColor(ImGuiCol.PlotHistogram, (Vector4)Color.CadetBlue);
-        }
 
         private void ShowProgress()
         {
@@ -127,7 +122,7 @@ namespace SQLiteDiskExplorer.UI
                             {
                                 ImGui.TableNextColumn(); 
                                 
-                                foreach (var keyword in config.ImportantKeywords)
+                                foreach (string keyword in config.ImportantKeywords)
                                 {
                                     if (file.FileInfo.FullName.Contains(keyword.ToLower()))
                                     {
@@ -136,15 +131,12 @@ namespace SQLiteDiskExplorer.UI
                                     }
                                 }
 
-                                if (config.CheckColumnKeywordPresence && (file.ColumnKeywordPresence is not null && file.ColumnKeywordPresence.Any()))
+                                if (config.CheckColumnKeywordPresence && file.ColumnKeywordPresence is not null && file.ColumnKeywordPresence.Any())
                                 {
                                     foreach (KeyValuePair<string, List<string>> found in file.ColumnKeywordPresence)
                                     {
                                         ImGui.TextColored((Vector4)Color.RoyalBlue, $"[{found.Key}]");
-                                        if (ImGui.IsItemHovered())
-                                        {
-                                            ImGui.SetTooltip($" {String.Join(",", found.Value)}");
-                                        }
+                                        if (ImGui.IsItemHovered()) ImGui.SetTooltip($" {string.Join(",", found.Value)}");
                                         ImGui.SameLine();
                                     }
                                 }

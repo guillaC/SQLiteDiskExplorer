@@ -1,8 +1,6 @@
 ﻿using SQLiteDiskExplorer.Model.Schema;
 using System.Data;
-using System.Data.Common;
 using System.Data.SQLite;
-using System.Linq;
 
 namespace SQLiteDiskExplorer.Core
 {
@@ -16,7 +14,6 @@ namespace SQLiteDiskExplorer.Core
             Console.WriteLine($"READING {fileName}");
             Connection = new SQLiteConnection($"Data Source={fileName}");
             LoadTableStructure();
-            //WritlnTables(Schema);
         }
 
         private void LoadTableStructure()

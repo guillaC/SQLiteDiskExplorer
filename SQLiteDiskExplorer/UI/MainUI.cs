@@ -1,14 +1,6 @@
-﻿using ClickableTransparentOverlay;
-using ImGuiNET;
-using SixLabors.ImageSharp.PixelFormats;
+﻿using ImGuiNET;
 using SQLiteDiskExplorer.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SQLiteDiskExplorer.UI
 {
@@ -136,7 +128,8 @@ namespace SQLiteDiskExplorer.UI
                                                        .Where(item => selectedDrive![item.Index])
                                                        .Select(item => item.Drive)
                                                        .ToList();
-                RenderControllerClass.scanForm = new ScanUI(selectedDrives);
+
+                if (selectedDrives.Any()) RenderControllerClass.scanForm = new ScanUI(selectedDrives);
             }
         }
         private void ShowAboutForm()

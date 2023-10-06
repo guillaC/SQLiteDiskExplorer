@@ -49,27 +49,12 @@ namespace SQLiteDiskExplorer.UI
                     ImGui.EndTabItem();
                 }
 
-                if (ImGui.BeginTabItem("Query"))
-                {
-                    ImGui.Text("Query");
-                    ImGui.EndTabItem();
-                }
-
-                /*
-                if (ImGui.BeginTabItem("Structure")) // Un jour qui sait.
-                */
-
                 if (ImGui.BeginTabItem("Header"))
                 {
                     if (sqlFileItem.FileHeader is not null)
                     {
                         Front.ShowHex(sqlFileItem.FileHeader.Header);
                     }
-                    else
-                    {
-                        ImGui.Text("Something went wrong");
-                    }
-
                     ImGui.EndTabItem();
                 }
                 ShowActions();
@@ -132,7 +117,7 @@ namespace SQLiteDiskExplorer.UI
 
                 foreach (DataRow row in dataOfSelectedTable)
                 {
-                    foreach (dynamic? cell in row.ItemArray)
+                    foreach (var cell in row.ItemArray)
                     {
                         try
                         {

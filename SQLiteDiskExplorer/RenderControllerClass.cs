@@ -13,7 +13,6 @@ namespace SQLiteDiskExplorer
         public static ConfigurationUI? configForm;
         public static SQLInfoUI? infoForm;
 
-
         protected override void Render() // loop
         {
             if (firstLoad)
