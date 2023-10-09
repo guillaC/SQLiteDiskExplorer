@@ -1,7 +1,7 @@
 ﻿{
   "IgnoreInaccessible": true,
-  "RecurseSubdirectories": false,
+  "RecurseSubdirectories": true,
   "CheckPathKeywordPresence": true,
   "CheckColumnKeywordPresence": true,
-  "ImportantKeywords": [ "login", "pass", "mail", "name" ]
+  "ImportantKeywords": [ "password" ]
 }

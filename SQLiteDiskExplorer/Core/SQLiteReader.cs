@@ -21,7 +21,6 @@ namespace SQLiteDiskExplorer.Core
             try
             {
                 Connection.Open();
-
                 DataTable table = Connection.GetSchema("Tables");
                 List<Table> tables = new();
 
@@ -45,7 +44,6 @@ namespace SQLiteDiskExplorer.Core
             catch (SQLiteException ex)
             {
                 Console.WriteLine("pb " + ex.Message);
-                return;
             }
             finally
             {
@@ -104,7 +102,7 @@ namespace SQLiteDiskExplorer.Core
             }
             catch (SQLiteException ex)
             {
-                Console.WriteLine("pb " + ex.Message);
+                Console.WriteLine("GetTableData: " + ex.Message);
             }
             finally
             {

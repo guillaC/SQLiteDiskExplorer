@@ -121,20 +121,20 @@ namespace SQLiteDiskExplorer.UI
                     {
                         try
                         {
-                            if (cell is not null)
+                            if (cell is not DBNull && cell is not null)
                             {
-                                if (cell is string ||
+                                if (
                                     cell is int ||
+                                    cell is string ||
+                                    cell is Int64 ||
                                     cell is float ||
-                                    cell is double ||
-                                    cell is Int64)
+                                    cell is double)
                                 {
-                                    ImGui.Text(cell.ToString());
+                                    ImGui.TextUnformatted(cell.ToString());
                                 }
                                 else
                                 {
-                                    ImGui.Text(cell.ToString());
-                                    Console.WriteLine("Type non géré : " + cell.GetType());
+                                    Console.WriteLine("Type non géré : " + cell.GetType() + ": " + cell.ToString());
                                 }
                             }
                         }

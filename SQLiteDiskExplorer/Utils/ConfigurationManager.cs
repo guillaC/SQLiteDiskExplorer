@@ -7,7 +7,7 @@ namespace SQLiteDiskExplorer.Utils
     {
         const string PATH = ".\\Res\\Config.json";
 
-        public static AppConfig? LoadConfiguration()
+        public static AppConfig LoadConfiguration()
         {
             AppConfig? tempConfig;
             if (!File.Exists(PATH))
