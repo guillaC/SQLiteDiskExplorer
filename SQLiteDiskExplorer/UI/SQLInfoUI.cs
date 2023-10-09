@@ -40,6 +40,7 @@ namespace SQLiteDiskExplorer.UI
                 if (ImGui.BeginTabItem("File Info"))
                 {
                     ImGui.Text("File Info");
+                    ImGui.Text("Show if db is locked or not");
                     ImGui.EndTabItem();
                 }
 
@@ -123,18 +124,32 @@ namespace SQLiteDiskExplorer.UI
                         {
                             if (cell is not DBNull && cell is not null)
                             {
-                                if (
-                                    cell is int ||
-                                    cell is string ||
-                                    cell is Int64 ||
-                                    cell is float ||
-                                    cell is double)
+                                switch (cell)
                                 {
-                                    ImGui.TextUnformatted(cell.ToString());
-                                }
-                                else
-                                {
-                                    Console.WriteLine("Type non géré : " + cell.GetType() + ": " + cell.ToString());
+                                    case int intValue:
+                                    case string stringValue:
+                                    case Int64 int64Value:
+                                    case float floatValue:
+                                    case double doubleValue:
+                                    case decimal decimalValue:
+                                        ImGui.TextUnformatted(cell.ToString());
+                                        break;
+                                    case bool boolValue:
+                                        var color = boolValue ? Color.GreenYellow : Color.Red;
+                                        ImGui.TextColored((Vector4)color, cell.ToString());
+                                        break;
+
+                                        /*
+                                    case byte byteValue:
+                                        if (ImGui.Button("[byts]"))
+                                        {
+
+                                        }
+                                        break;
+                                        */
+                                    default:
+                                        Console.WriteLine("Type non géré : " + cell.GetType() + ": " + cell.ToString());
+                                        break;
                                 }
                             }
                         }
