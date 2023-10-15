@@ -138,15 +138,13 @@ namespace SQLiteDiskExplorer.UI
                                         var color = boolValue ? Color.GreenYellow : Color.Red;
                                         ImGui.TextColored((Vector4)color, cell.ToString());
                                         break;
-
-                                        /*
-                                    case byte byteValue:
-                                        if (ImGui.Button("[byts]"))
+                                    case byte[] byteValue:
+                                        if (ImGui.Button("byte[]"))
                                         {
-
+                                            RenderControllerClass.hexUIForm = new HexUI((byte[]?)cell);
                                         }
                                         break;
-                                        */
+                                        
                                     default:
                                         Console.WriteLine("Type non géré : " + cell.GetType() + ": " + cell.ToString());
                                         break;

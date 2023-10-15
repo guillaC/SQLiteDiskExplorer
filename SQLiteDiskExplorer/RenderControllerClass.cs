@@ -12,6 +12,7 @@ namespace SQLiteDiskExplorer
         public static ScanUI? scanForm;
         public static ConfigurationUI? configForm;
         public static SQLInfoUI? infoForm;
+        public static HexUI? hexUIForm;
 
         protected override void Render() // loop
         {
@@ -27,6 +28,7 @@ namespace SQLiteDiskExplorer
             if (scanForm != null) scanForm.Show();
             if (configForm != null) configForm.Show();
             if (infoForm != null) infoForm.Show();
+            if (hexUIForm != null) hexUIForm.Show();
         }
     }
 }
