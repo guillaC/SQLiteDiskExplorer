@@ -32,13 +32,30 @@ namespace SQLiteDiskExplorer.UI
                 firstLoad = !firstLoad;
             }
             
-            
             /*
              * TODO : debug ici
              */
 
             Front.ShowHex(data);
+            ShowActions();
             ImGui.End();
+        }
+
+
+        private void ShowActions()
+        {
+            ImGui.SetCursorPosX(ImGui.GetWindowSize().X - 90);
+
+            if (ImGui.Button("Exit"))
+            {
+                isOpen = false;
+            }
+            ImGui.SameLine();
+            if (ImGui.Button("Save"))
+            {
+                //todo
+                isOpen = false;
+            }
         }
 
     }

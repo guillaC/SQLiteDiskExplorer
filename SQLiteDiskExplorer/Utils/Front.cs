@@ -24,6 +24,9 @@ namespace SQLiteDiskExplorer.Utils
         {
             ImGui.BeginTable("Hex", 16, ImGuiTableFlags.Resizable | ImGuiTableFlags.NoSavedSettings | ImGuiTableFlags.Borders);
 
+            Console.WriteLine($"data length : {data.Length}");
+            Console.WriteLine($"tostring : {data}");
+
             for (int i = 0; i <= 0xF; i++)
             {
                 ImGui.TableSetupColumn(" " + i.ToString("X"), ImGuiTableColumnFlags.NoResize);

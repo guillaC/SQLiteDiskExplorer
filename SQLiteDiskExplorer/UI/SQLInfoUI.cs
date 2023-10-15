@@ -141,7 +141,16 @@ namespace SQLiteDiskExplorer.UI
                                     case byte[] byteValue:
                                         if (ImGui.Button("byte[]"))
                                         {
-                                            RenderControllerClass.hexUIForm = new HexUI((byte[]?)cell);
+                                            // pb premier button ok, TODO 
+
+                                            Console.WriteLine($"byteValue Value {byteValue.ToString()}");
+                                            Console.WriteLine($"byteValue Length {byteValue.Length}");
+                                            Console.WriteLine($"byteValue GetType {byteValue.GetType()}");
+                                            Console.WriteLine($"byteValue GetHashCode {byteValue.GetHashCode}");
+                                            Console.WriteLine($"cell GetType {cell.GetType()}");
+                                            Console.WriteLine($"cell GetHashCode {cell.GetHashCode}");
+
+                                            // RenderControllerClass.hexUIForm = new HexUI((byte[]?)cell);
                                         }
                                         break;
                                         
