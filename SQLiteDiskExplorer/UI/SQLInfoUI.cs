@@ -104,6 +104,7 @@ namespace SQLiteDiskExplorer.UI
 
         private void ShowTableData()
         {
+            int i = 0;
             if (dataOfSelectedTable is not null && dataOfSelectedTable.Count > 0)
             {
                 ImGui.BeginChild("tableData", new(ImGui.GetWindowSize().X - 170, ImGui.GetWindowSize().Y - 110));
@@ -139,21 +140,15 @@ namespace SQLiteDiskExplorer.UI
                                         ImGui.TextColored((Vector4)color, cell.ToString());
                                         break;
                                     case byte[] byteValue:
-                                        if (ImGui.Button("byte[]"))
+
+                                        ImGui.PushID($"Hex#{i++}");
+                                        if (ImGui.Button($"byte[{byteValue.Length}]"))
                                         {
-                                            // pb premier button ok, TODO 
-
-                                            Console.WriteLine($"byteValue Value {byteValue.ToString()}");
-                                            Console.WriteLine($"byteValue Length {byteValue.Length}");
-                                            Console.WriteLine($"byteValue GetType {byteValue.GetType()}");
-                                            Console.WriteLine($"byteValue GetHashCode {byteValue.GetHashCode}");
-                                            Console.WriteLine($"cell GetType {cell.GetType()}");
-                                            Console.WriteLine($"cell GetHashCode {cell.GetHashCode}");
-
-                                            // RenderControllerClass.hexUIForm = new HexUI((byte[]?)cell);
+                                            RenderControllerClass.hexUIForm = new HexUI((byte[]?)cell);
                                         }
+                                        ImGui.PopID();
                                         break;
-                                        
+
                                     default:
                                         Console.WriteLine("Type non géré : " + cell.GetType() + ": " + cell.ToString());
                                         break;

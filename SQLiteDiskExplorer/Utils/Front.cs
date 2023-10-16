@@ -15,9 +15,15 @@ namespace SQLiteDiskExplorer.Utils
             if (ImGui.IsItemHovered())
             {
                 ImGui.BeginTooltip();
-                ImGui.Text(tips); 
+                ImGui.Text(tips);
                 ImGui.EndTooltip();
             }
+        }
+
+        //TODO
+        public static void ShowHexToString(byte[] data)
+        {
+
         }
 
         public static void ShowHex(byte[] data)
