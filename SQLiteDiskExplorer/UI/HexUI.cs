@@ -28,15 +28,20 @@ namespace SQLiteDiskExplorer.UI
 
             if (firstLoad)
             {
-                ImGui.SetWindowSize(new Vector2(1500, 700));
                 firstLoad = !firstLoad;
             }
-            
-            /*
-             * TODO : debug ici
-             */
 
+            ImGui.BeginGroup();
             Front.ShowHex(data);
+            ImGui.EndGroup();
+
+            ImGui.SameLine();
+
+            ImGui.BeginGroup();
+            Front.ShowHexToString(data);
+            ImGui.EndGroup();
+
+
             ShowActions();
             ImGui.End();
         }

@@ -1,5 +1,6 @@
 ﻿using ImGuiNET;
 using System.Numerics;
+using System.Text;
 
 namespace SQLiteDiskExplorer.Utils
 {
@@ -20,18 +21,49 @@ namespace SQLiteDiskExplorer.Utils
             }
         }
 
-        //TODO
         public static void ShowHexToString(byte[] data)
         {
+            ImGui.BeginTable("HexToString", 16, ImGuiTableFlags.Resizable | ImGuiTableFlags.NoSavedSettings | ImGuiTableFlags.Borders, new Vector2(260, 0));
 
+            for (int i = 0; i <= 0xF; i++)
+            {
+                ImGui.TableSetupColumn(i.ToString("X"), ImGuiTableColumnFlags.NoResize);
+            }
+
+            ImGui.TableHeadersRow();
+
+            int valuesPerRow = 16;
+
+            for (int i = 0; i < data.Length; i += valuesPerRow)
+            {
+                ImGui.TableNextRow();
+                for (int j = 0; j < valuesPerRow; j++)
+                {
+                    ImGui.TableNextColumn();
+                    int index = i + j;
+                    if (index < data.Length)
+                    {
+                        if (data[index] == byte.MinValue)
+                        {
+                            ImGui.TextColored((Vector4)Color.Gray,".");
+                        } else
+                        {
+                            ImGui.TextColored((Vector4)Color.WhiteSmoke, Convert.ToChar(data[index]).ToString());
+                        }
+                    }
+                    else
+                    {
+                        ImGui.Text("");
+                    }
+                }
+            }
+
+            ImGui.EndTable();
         }
 
         public static void ShowHex(byte[] data)
         {
-            ImGui.BeginTable("Hex", 16, ImGuiTableFlags.Resizable | ImGuiTableFlags.NoSavedSettings | ImGuiTableFlags.Borders);
-
-            Console.WriteLine($"data length : {data.Length}");
-            Console.WriteLine($"tostring : {data}");
+            ImGui.BeginTable("Hex", 16, ImGuiTableFlags.Resizable | ImGuiTableFlags.NoSavedSettings | ImGuiTableFlags.Borders, new Vector2(500, 0));
 
             for (int i = 0; i <= 0xF; i++)
             {
