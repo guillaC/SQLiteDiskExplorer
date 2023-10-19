@@ -45,7 +45,7 @@ namespace SQLiteDiskExplorer.UI
             ImGui.End();
         }
 
-        private void ShowMenuBar()
+        private static void ShowMenuBar()
         {
             ImGui.BeginMenuBar();
 
@@ -60,6 +60,7 @@ namespace SQLiteDiskExplorer.UI
             }
 
             ImGui.Separator();
+
             if (ImGui.MenuItem("Exit", "Alt+F4"))
             {
                 Environment.Exit(0);
@@ -132,12 +133,12 @@ namespace SQLiteDiskExplorer.UI
                 if (selectedDrives.Any()) RenderControllerClass.scanForm = new ScanUI(selectedDrives);
             }
         }
-        private void ShowAboutForm()
+        private static void ShowAboutForm()
         {
             RenderControllerClass.aboutForm = new AboutUI();
         }
 
-        private void ShowConfigForm()
+        private static void ShowConfigForm()
         {
             RenderControllerClass.configForm = new ConfigurationUI();
         }
@@ -145,8 +146,8 @@ namespace SQLiteDiskExplorer.UI
         private void InitializeSelectedDriveList()
         {
             drives = Drive.GetDrives();
-            var device = Device.GetDevices();
-            selectedDrive = new bool[drives.Count()];
+            // var device = Device.GetDevices();
+            selectedDrive = new bool[drives.Count];
         }
     }
 }

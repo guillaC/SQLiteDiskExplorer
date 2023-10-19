@@ -113,10 +113,10 @@ namespace SQLiteDiskExplorer.UI
                         if (ImGui.BeginChild($"Result {drive.Name}"))
                         {
                             ImGui.BeginTable("Files", 4, ImGuiTableFlags.Resizable | ImGuiTableFlags.NoSavedSettings | ImGuiTableFlags.Borders);
-                            ImGui.TableSetupColumn("Name", ImGuiTableColumnFlags.None, 0.65f);
+                            ImGui.TableSetupColumn("Name", ImGuiTableColumnFlags.None, 0.70f);
                             ImGui.TableSetupColumn("Date", ImGuiTableColumnFlags.NoResize, 0.15f);
                             ImGui.TableSetupColumn("Size", ImGuiTableColumnFlags.NoResize, 0.07f);
-                            ImGui.TableSetupColumn("Action", ImGuiTableColumnFlags.NoResize, 0.13f);
+                            ImGui.TableSetupColumn("Action", ImGuiTableColumnFlags.NoResize, 0.05f);
                             ImGui.TableHeadersRow();
                             foreach (FileItem file in info.Value)
                             {

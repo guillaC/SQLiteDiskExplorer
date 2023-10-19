@@ -112,17 +112,17 @@ namespace SQLiteDiskExplorer.Core
             {
                 if (options.RecurseSubdirectories && options.IgnoreInaccessible)
                 {
+                    /*
 #if DEBUG
                    string directory = "C:\\Users\\Guillaume\\AppData\\Local\\Microsoft\\Edge\\User Data\\Default";
+                   paths = CustomEnumerateFiles(directory);
 #endif
-                    paths = CustomEnumerateFiles(directory);
-                    //paths = CustomEnumerateFiles(drive.Name);
+                    */
+
+                    paths = CustomEnumerateFiles(drive.Name);
                 }
                 else
                 {
-
-                    
-                    Console.WriteLine(options.ToString());
                     paths = Directory.EnumerateFiles(drive.Name, "*", options).ToList();
                 }
                 Console.WriteLine($"Done. {paths.Count}");

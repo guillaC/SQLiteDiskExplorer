@@ -112,7 +112,7 @@ namespace SQLiteDiskExplorer.Core
             return tableData;
         }
 
-
+        /*
         private static void WritlnTables(List<Table> tables)
         {
             foreach (var table in tables)
@@ -121,5 +121,6 @@ namespace SQLiteDiskExplorer.Core
                 Console.WriteLine($"Table Name: {table.TableName}, Columns: {columnNames}");
             }
         }
+        */
     }
 }

@@ -3,5 +3,5 @@
   "RecurseSubdirectories": true,
   "CheckPathKeywordPresence": true,
   "CheckColumnKeywordPresence": true,
-  "ImportantKeywords": [ "password" ]
+  "ImportantKeywords": [ "password", "login", "key" ]
 }

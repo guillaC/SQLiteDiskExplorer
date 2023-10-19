@@ -16,7 +16,7 @@ namespace SQLiteDiskExplorer.UI
         private SQLiteReader reader;
 
         Table? selectedTable;
-        List<DataRow> dataOfSelectedTable;
+        List<DataRow> dataOfSelectedTable = new();
 
         public SQLInfoUI(FileItem sqlItem)
         {
@@ -37,27 +37,12 @@ namespace SQLiteDiskExplorer.UI
 
             if (ImGui.BeginTabBar("ControlTabs", ImGuiTabBarFlags.None))
             {
-                if (ImGui.BeginTabItem("File Info"))
-                {
-                    ImGui.Text("File Info");
-                    ImGui.Text("Show if db is locked or not");
-                    ImGui.EndTabItem();
-                }
-
                 if (ImGui.BeginTabItem("Data"))
                 {
                     ShowData();
                     ImGui.EndTabItem();
                 }
 
-                if (ImGui.BeginTabItem("Header"))
-                {
-                    if (sqlFileItem.FileHeader is not null)
-                    {
-                        Front.ShowHex(sqlFileItem.FileHeader.Header);
-                    }
-                    ImGui.EndTabItem();
-                }
                 ShowActions();
             }
 
@@ -66,7 +51,7 @@ namespace SQLiteDiskExplorer.UI
 
         private void ShowActions()
         {
-            ImGui.SetCursorPos(new Vector2(ImGui.GetWindowSize().X - 45, ImGui.GetWindowSize().Y - 30));
+            ImGui.SetCursorPos(new Vector2(ImGui.GetWindowSize().X - 45, ImGui.GetWindowSize().Y - 40));
             if (ImGui.Button("Exit"))
             {
                 isOpen = false;
