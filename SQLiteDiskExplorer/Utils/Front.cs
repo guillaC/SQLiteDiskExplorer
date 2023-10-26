@@ -1,6 +1,5 @@
 ﻿using ImGuiNET;
 using System.Numerics;
-using System.Text;
 
 namespace SQLiteDiskExplorer.Utils
 {
@@ -45,8 +44,9 @@ namespace SQLiteDiskExplorer.Utils
                     {
                         if (data[index] == byte.MinValue)
                         {
-                            ImGui.TextColored((Vector4)Color.Gray,".");
-                        } else
+                            ImGui.TextColored((Vector4)Color.Gray, ".");
+                        }
+                        else
                         {
                             ImGui.TextColored((Vector4)Color.WhiteSmoke, Convert.ToChar(data[index]).ToString());
                         }

@@ -23,15 +23,15 @@ namespace SQLiteDiskExplorer.UI
 
             ImGui.BulletText("Github: www.github.com/guillaC");
             ImGui.BulletText("E-Mail: k0odxblrd@mozmail.com");
-            
+
             ImGui.Separator();
             ImGui.Text("Feel free to reach out for any inquiries, suggestions, or feedback !");
-            
+
             ImGui.SeparatorText("Disclaimer");
             ImGui.Text("This software solution is intended for forensic purposes and is designed to\n" +
                 "facilitate the retrieval of data from SQLite files.");
             ImGui.Text("I take no responsibility for how this program is used.");
-            
+
             ImGui.SameLine();
 
             ImGui.SetCursorPosX(ImGui.GetWindowSize().X - 45);

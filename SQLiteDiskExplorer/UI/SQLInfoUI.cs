@@ -12,6 +12,7 @@ namespace SQLiteDiskExplorer.UI
     {
         bool firstLoad = true;
         bool isOpen = true;
+        byte[] fileHex;
         readonly FileItem sqlFileItem;
         private SQLiteReader reader;
 
@@ -20,7 +21,15 @@ namespace SQLiteDiskExplorer.UI
 
         public SQLInfoUI(FileItem sqlItem)
         {
-            sqlFileItem = sqlItem;
+            try
+            {
+                fileHex = ReadSave.ReadFile(sqlItem.FileInfo.FullName);
+                sqlFileItem = sqlItem;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         public void Show()
@@ -34,12 +43,31 @@ namespace SQLiteDiskExplorer.UI
                 reader = new(sqlFileItem.FileInfo.FullName);
                 ImGui.SetWindowSize(new Vector2(650, 600));
             }
-
             if (ImGui.BeginTabBar("ControlTabs", ImGuiTabBarFlags.None))
             {
                 if (ImGui.BeginTabItem("Data"))
                 {
                     ShowData();
+                    ImGui.EndTabItem();
+                }
+                
+                if (ImGui.BeginTabItem("Hex"))
+                {
+                    if (fileHex is not null && fileHex.Length > 0)
+                    {
+                        ImGui.BeginGroup();
+                        Front.ShowHex(fileHex);
+                        ImGui.EndGroup();
+                        ImGui.SameLine();
+                        ImGui.BeginGroup();
+                        Front.ShowHexToString(fileHex);
+                        ImGui.EndGroup();
+                    }
+                    else
+                    {
+                        ImGui.Text("ERROR.");
+                    }
+
                     ImGui.EndTabItem();
                 }
 
@@ -51,7 +79,7 @@ namespace SQLiteDiskExplorer.UI
 
         private void ShowActions()
         {
-            ImGui.SetCursorPos(new Vector2(ImGui.GetWindowSize().X - 45, ImGui.GetWindowSize().Y - 40));
+            ImGui.SetCursorPos(new Vector2(ImGui.GetWindowSize().X - 55, ImGui.GetWindowSize().Y - 30));
             if (ImGui.Button("Exit"))
             {
                 isOpen = false;

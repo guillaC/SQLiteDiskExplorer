@@ -120,8 +120,8 @@ namespace SQLiteDiskExplorer.UI
                             ImGui.TableHeadersRow();
                             foreach (FileItem file in info.Value)
                             {
-                                ImGui.TableNextColumn(); 
-                                
+                                ImGui.TableNextColumn();
+
                                 foreach (string keyword in config.ImportantKeywords)
                                 {
                                     if (file.FileInfo.FullName.Contains(keyword.ToLower()))

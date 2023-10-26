@@ -1,7 +1,5 @@
 ﻿using SQLiteDiskExplorer.Model;
-using SQLiteDiskExplorer.Model.Schema;
 using SQLiteDiskExplorer.Utils;
-using System.IO;
 using System.Text;
 
 namespace SQLiteDiskExplorer.Core
@@ -112,14 +110,15 @@ namespace SQLiteDiskExplorer.Core
             {
                 if (options.RecurseSubdirectories && options.IgnoreInaccessible)
                 {
-                    /*
+
 #if DEBUG
-                   string directory = "C:\\Users\\Guillaume\\AppData\\Local\\Microsoft\\Edge\\User Data\\Default";
-                   paths = CustomEnumerateFiles(directory);
-#endif
-                    */
+                    string directory = "C:\\Users\\Guillaume\\AppData\\Local\\Microsoft\\Edge\\User Data\\Default";
+                    paths = CustomEnumerateFiles(directory);
+#else
+
 
                     paths = CustomEnumerateFiles(drive.Name);
+#endif
                 }
                 else
                 {
