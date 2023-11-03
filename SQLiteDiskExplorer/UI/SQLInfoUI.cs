@@ -41,19 +41,25 @@ namespace SQLiteDiskExplorer.UI
             {
                 firstLoad = !firstLoad;
                 reader = new(sqlFileItem.FileInfo.FullName);
-                ImGui.SetWindowSize(new Vector2(650, 600));
+                ImGui.SetWindowSize(new Vector2(650, 610));
             }
-            if (ImGui.BeginTabBar("ControlTabs", ImGuiTabBarFlags.None))
+
+            if (fileHex is null || fileHex.Length == 0)
             {
-                if (ImGui.BeginTabItem("Data"))
+                ImGui.Text("Unable to read the file, please check the console for more details.");
+                ImGui.SetWindowSize(new Vector2(650, 80));
+            }
+            else
+            {
+                if (ImGui.BeginTabBar("ControlTabs", ImGuiTabBarFlags.None))
                 {
-                    ShowData();
-                    ImGui.EndTabItem();
-                }
-                
-                if (ImGui.BeginTabItem("Hex"))
-                {
-                    if (fileHex is not null && fileHex.Length > 0)
+                    if (ImGui.BeginTabItem("Data"))
+                    {
+                        ShowData();
+                        ImGui.EndTabItem();
+                    }
+
+                    if (ImGui.BeginTabItem("Hex"))
                     {
                         ImGui.BeginGroup();
                         Front.ShowHex(fileHex);
@@ -62,24 +68,23 @@ namespace SQLiteDiskExplorer.UI
                         ImGui.BeginGroup();
                         Front.ShowHexToString(fileHex);
                         ImGui.EndGroup();
-                    }
-                    else
-                    {
-                        ImGui.Text("ERROR.");
-                    }
 
-                    ImGui.EndTabItem();
+                        ImGui.EndTabItem();
+                    }
                 }
-
-                ShowActions();
             }
-
+            ImGui.EndTabBar();
+            ShowActions();
             ImGui.End();
         }
 
         private void ShowActions()
         {
-            ImGui.SetCursorPos(new Vector2(ImGui.GetWindowSize().X - 55, ImGui.GetWindowSize().Y - 30));
+            if (ImGui.Button("Save"))
+            {
+                isOpen = false;
+            }
+            ImGui.SameLine();
             if (ImGui.Button("Exit"))
             {
                 isOpen = false;
@@ -89,7 +94,7 @@ namespace SQLiteDiskExplorer.UI
         private void ShowData()
         {
             ImGui.BeginGroup();
-            ImGui.BeginListBox("", new(150, ImGui.GetWindowSize().Y - 60));
+            ImGui.BeginListBox("", new(150, ImGui.GetWindowSize().Y - 85));
             foreach (Table table in reader.Schema)
             {
                 if (ImGui.Selectable(table.TableName))

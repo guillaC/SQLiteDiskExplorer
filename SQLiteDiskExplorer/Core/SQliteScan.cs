@@ -112,7 +112,7 @@ namespace SQLiteDiskExplorer.Core
                 {
 
 #if DEBUG
-                    string directory = "C:\\Users\\Guillaume\\AppData\\Local\\Microsoft\\Edge\\User Data\\Default";
+                    string directory = "C:\\Users\\Guillaume\\AppData\\Local\\Microsoft\\Edge\\";
                     paths = CustomEnumerateFiles(directory);
 #else
 
