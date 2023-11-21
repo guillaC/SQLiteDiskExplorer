@@ -1,5 +1,6 @@
 ﻿using ImGuiNET;
 using System.Numerics;
+using System.Text;
 
 namespace SQLiteDiskExplorer.Utils
 {
@@ -18,6 +19,43 @@ namespace SQLiteDiskExplorer.Utils
                 ImGui.Text(tips);
                 ImGui.EndTooltip();
             }
+        }
+
+        public static void ShowStringFromHex(byte[] data)
+        {
+            List<string> stringsList = new List<string>();
+
+            int startIndex = 0;
+
+            for (int i = 0; i < data.Length; i++)
+            {
+                if (data[i] == 0x00)
+                {
+                    byte[] substringBytes = new byte[i - startIndex];
+                    Array.Copy(data, startIndex, substringBytes, 0, i - startIndex);
+                    string substring = Encoding.UTF8.GetString(substringBytes);
+                    if (!string.IsNullOrEmpty(substring)) stringsList.Add(substring);
+                    startIndex = i + 1;
+                }
+            }
+
+            ImGui.BeginTable("Strings", 2, ImGuiTableFlags.Resizable | ImGuiTableFlags.NoSavedSettings | ImGuiTableFlags.Borders);
+            ImGui.TableSetupColumn("index", ImGuiTableColumnFlags.None, 0.07f);
+            ImGui.TableSetupColumn("string", ImGuiTableColumnFlags.None, 0.93f);
+
+            ImGui.TableHeadersRow();
+
+            int index = 0;
+            foreach (string s in stringsList)
+            {
+                index++;
+                ImGui.TableNextRow();
+                ImGui.TableNextColumn();
+                ImGui.Text(index.ToString());
+                ImGui.TableNextColumn();
+                ImGui.Text(s);
+            }
+            ImGui.EndTable();
         }
 
         public static void ShowHexToString(byte[] data)

@@ -71,6 +71,15 @@ namespace SQLiteDiskExplorer.UI
 
                         ImGui.EndTabItem();
                     }
+
+                    if (ImGui.BeginTabItem("Strings"))
+                    {
+                        ImGui.BeginGroup();
+                        Front.ShowStringFromHex(fileHex);
+                        ImGui.EndGroup();
+
+                        ImGui.EndTabItem();
+                    }
                 }
             }
             ImGui.EndTabBar();

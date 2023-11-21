@@ -115,8 +115,6 @@ namespace SQLiteDiskExplorer.Core
                     string directory = "C:\\Users\\Guillaume\\AppData\\Local\\Microsoft\\Edge\\";
                     paths = CustomEnumerateFiles(directory);
 #else
-
-
                     paths = CustomEnumerateFiles(drive.Name);
 #endif
                 }
