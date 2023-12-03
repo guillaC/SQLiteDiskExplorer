@@ -1,6 +1,8 @@
 ﻿using ImGuiNET;
+using SQLiteDiskExplorer.UI;
 using System.Numerics;
 using System.Text;
+
 
 namespace SQLiteDiskExplorer.Utils
 {
@@ -23,21 +25,7 @@ namespace SQLiteDiskExplorer.Utils
 
         public static void ShowStringFromHex(byte[] data)
         {
-            List<string> stringsList = new List<string>();
-
-            int startIndex = 0;
-
-            for (int i = 0; i < data.Length; i++)
-            {
-                if (data[i] == 0x00)
-                {
-                    byte[] substringBytes = new byte[i - startIndex];
-                    Array.Copy(data, startIndex, substringBytes, 0, i - startIndex);
-                    string substring = Encoding.UTF8.GetString(substringBytes);
-                    if (!string.IsNullOrEmpty(substring)) stringsList.Add(substring);
-                    startIndex = i + 1;
-                }
-            }
+            List<string> stringsList = StringHex.ExtractStrings(data);
 
             ImGui.BeginTable("Strings", 2, ImGuiTableFlags.Resizable | ImGuiTableFlags.NoSavedSettings | ImGuiTableFlags.Borders);
             ImGui.TableSetupColumn("index", ImGuiTableColumnFlags.None, 0.07f);
