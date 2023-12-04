@@ -1,4 +1,7 @@
-﻿using System.Text;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Linq;
 
 namespace SQLiteDiskExplorer.Utils
 {
@@ -16,7 +19,7 @@ namespace SQLiteDiskExplorer.Utils
                 {
                     byte[] substringBytes = new byte[i - startIndex];
                     Array.Copy(data, startIndex, substringBytes, 0, i - startIndex);
-                    string substring = Encoding.UTF8.GetString(substringBytes);
+                    string substring = Encoding.Default.GetString(substringBytes);
                     if (!string.IsNullOrEmpty(substring) && substring.Length > 3 && IsStringReadable(substring))
                         stringsList.Add(substring);
                     startIndex = i + 1;
@@ -28,12 +31,9 @@ namespace SQLiteDiskExplorer.Utils
 
         public static bool IsStringReadable(string str)
         {
-            foreach (char c in str)
-            {
-                if (!char.IsLetterOrDigit(c) && !char.IsPunctuation(c) && !char.IsWhiteSpace(c)) return false;
-            }
-            return true;
-        }
+            int invalidCharCount = str.Count(c => !char.IsLetterOrDigit(c) && !char.IsPunctuation(c) && !char.IsWhiteSpace(c));
 
+            return invalidCharCount <= str.Length * 0.05; // 5% de caractères invalides max
+        }
     }
 }
