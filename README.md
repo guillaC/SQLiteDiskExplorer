@@ -7,8 +7,11 @@ SQLite is a widely popular database format extensively utilized across a broad s
 SQLiteDiskExplorer is a tool designed to assist you in the efficient management of *your* SQLite files. Explore and manage your SQLite files with ease using SQLiteDiskExplorer, Your valuable data is just a scan away !
 
 ## 📎Key Features
-- **Explore SQLite Files:** Easily navigate and explore SQLite files stored on disks.
-  - Configure the application to perform targeted term searches within the columns and paths of SQLite files, enabling quick date retrieval.
+- **Multi-Drive Scanning:**
+  - Scan multiple drives or hard disks simultaneously.
+- **Explore SQLite Files:**
+  - Easily navigate and explore SQLite files stored on disks.
+  - Configure the application to perform targeted term searches within the columns and paths of SQLite files, enabling quick data retrieval.
 - **User-Friendly Interface:**
   - Intuitive interface that doesn't require extensive technical knowledge.
   - HexViewer
@@ -16,6 +19,7 @@ SQLiteDiskExplorer is a tool designed to assist you in the efficient management 
 ## 📝Todo
 - **Data Visualization:** Display the structure and content of your SQLite databases.
 - **Batch Extraction:** Extract multiple SQLite files one shot, saving time and effort.
+- **Scan External Devices:** Extend your exploration to external devices (including phones)
 
 ## ✨Screenshots
 ![image](https://github.com/guillaC/SQLiteDiskExplorer/assets/6315083/f859a73c-cf6f-4a43-b864-6bd2d8ea7ddd)
