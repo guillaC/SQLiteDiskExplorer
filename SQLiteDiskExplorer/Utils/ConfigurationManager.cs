@@ -28,7 +28,6 @@ namespace SQLiteDiskExplorer.Utils
             AppConfig result = JsonSerializer.Deserialize<AppConfig>(json)!;
             result.ImportantKeywords = result.ImportantKeywords.ConvertAll(d => d.ToLower());
             return result;
-
         }
 
         public static void SaveConfiguration(AppConfig config)

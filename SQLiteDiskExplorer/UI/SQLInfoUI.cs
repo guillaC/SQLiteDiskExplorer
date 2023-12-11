@@ -50,6 +50,7 @@ namespace SQLiteDiskExplorer.UI
                 if (ImGui.BeginTabItem("Data"))
                 {
                     ShowData();
+                    ShowActions();
                     ImGui.EndTabItem();
                 }
 
@@ -72,14 +73,12 @@ namespace SQLiteDiskExplorer.UI
                         ImGui.BeginGroup();
                         Front.ShowStringFromHex(fileHex);
                         ImGui.EndGroup();
-
                         ImGui.EndTabItem();
                     }
                 }
             }
 
             ImGui.EndTabBar();
-            ShowActions();
             ImGui.End();
         }
 
@@ -87,8 +86,8 @@ namespace SQLiteDiskExplorer.UI
         {
             if (ImGui.Button("Save"))
             {
-                string cheminFichierCible = Path.Combine(Directory.GetParent(Environment.CurrentDirectory)!.FullName, $"COPY_{Path.GetFileNameWithoutExtension(sqlFileItem.FileInfo.Name)}_{DateTime.Now:yyyyMMdd_HHmmss}_{Guid.NewGuid().ToString().Substring(1, 5)}.sqlite");
-                ReadSave.CopyFile(sqlFileItem.FileInfo.FullName, cheminFichierCible);
+                string targetPath = Path.Combine($"{Environment.CurrentDirectory}/Export", $"{Path.GetFileNameWithoutExtension(sqlFileItem.FileInfo.Name)}_{DateTime.Now:yyyyMMdd_HHmmss}_{Guid.NewGuid().ToString().Substring(1, 5)}.sqlite");
+                ReadSave.CopyFile(sqlFileItem.FileInfo.FullName, targetPath);
 
                 isOpen = false;
             }

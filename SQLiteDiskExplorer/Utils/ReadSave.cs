@@ -20,6 +20,14 @@
         {
             try
             {
+                string destinationDirectory = Path.GetDirectoryName(destinationFilePath) ?? "";
+                if (string.IsNullOrEmpty(destinationDirectory)) return false;
+
+                if (!Directory.Exists(destinationDirectory))
+                {
+                    Directory.CreateDirectory(destinationDirectory);
+                }
+
                 File.Copy(sourceFilePath, destinationFilePath);
                 return true;
             }
@@ -30,6 +38,5 @@
 
             return false;
         }
-
     }
 }
