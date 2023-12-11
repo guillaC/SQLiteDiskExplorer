@@ -34,6 +34,7 @@ namespace SQLiteDiskExplorer.Utils
             ImGui.TableHeadersRow();
 
             int index = 0;
+
             foreach (string s in stringsList)
             {
                 index++;
@@ -43,6 +44,7 @@ namespace SQLiteDiskExplorer.Utils
                 ImGui.TableNextColumn();
                 ImGui.Text(s);
             }
+
             ImGui.EndTable();
         }
 

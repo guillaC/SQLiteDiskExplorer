@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
+﻿using System.Text;
 
 namespace SQLiteDiskExplorer.Utils
 {
@@ -20,8 +17,8 @@ namespace SQLiteDiskExplorer.Utils
                     byte[] substringBytes = new byte[i - startIndex];
                     Array.Copy(data, startIndex, substringBytes, 0, i - startIndex);
                     string substring = Encoding.Default.GetString(substringBytes);
-                    if (!string.IsNullOrEmpty(substring) && substring.Length > 3 && IsStringReadable(substring))
-                        stringsList.Add(substring);
+                    if (!string.IsNullOrEmpty(substring) && substring.Length > 5 && IsStringReadable(substring))
+                        stringsList.Add(RemoveUnreadableCharacters(substring));
                     startIndex = i + 1;
                 }
             }
@@ -29,11 +26,18 @@ namespace SQLiteDiskExplorer.Utils
             return stringsList;
         }
 
+        static string RemoveUnreadableCharacters(string input)
+        {
+            input = input.Replace("%","").Trim();
+            IEnumerable<char> validChars = input.Where(c => char.IsLetterOrDigit(c) || char.IsWhiteSpace(c) || char.IsPunctuation(c));
+            return new string(validChars.ToArray());
+        }
+
         public static bool IsStringReadable(string str)
         {
             int invalidCharCount = str.Count(c => !char.IsLetterOrDigit(c) && !char.IsPunctuation(c) && !char.IsWhiteSpace(c));
-
-            return invalidCharCount <= str.Length * 0.05; // 5% de caractères invalides max
+            return invalidCharCount <= str.Length * 0.20; // 20% de caractères invalides max
         }
+
     }
 }

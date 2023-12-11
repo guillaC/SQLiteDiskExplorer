@@ -44,21 +44,17 @@ namespace SQLiteDiskExplorer.UI
                 ImGui.SetWindowSize(new Vector2(650, 610));
             }
 
-            if (fileHex is null || fileHex.Length == 0)
-            {
-                ImGui.Text("Unable to read the file, please check the console for more details.");
-                ImGui.SetWindowSize(new Vector2(650, 80));
-            }
-            else
-            {
-                if (ImGui.BeginTabBar("ControlTabs", ImGuiTabBarFlags.None))
-                {
-                    if (ImGui.BeginTabItem("Data"))
-                    {
-                        ShowData();
-                        ImGui.EndTabItem();
-                    }
 
+            if (ImGui.BeginTabBar("ControlTabs", ImGuiTabBarFlags.None))
+            {
+                if (ImGui.BeginTabItem("Data"))
+                {
+                    ShowData();
+                    ImGui.EndTabItem();
+                }
+
+                if (fileHex?.Length > 0)
+                {
                     if (ImGui.BeginTabItem("Hex"))
                     {
                         ImGui.BeginGroup();
@@ -68,7 +64,6 @@ namespace SQLiteDiskExplorer.UI
                         ImGui.BeginGroup();
                         Front.ShowHexToString(fileHex);
                         ImGui.EndGroup();
-
                         ImGui.EndTabItem();
                     }
 
@@ -82,6 +77,7 @@ namespace SQLiteDiskExplorer.UI
                     }
                 }
             }
+
             ImGui.EndTabBar();
             ShowActions();
             ImGui.End();
@@ -91,6 +87,9 @@ namespace SQLiteDiskExplorer.UI
         {
             if (ImGui.Button("Save"))
             {
+                string cheminFichierCible = Path.Combine(Directory.GetParent(Environment.CurrentDirectory)!.FullName, $"COPY_{Path.GetFileNameWithoutExtension(sqlFileItem.FileInfo.Name)}_{DateTime.Now:yyyyMMdd_HHmmss}_{Guid.NewGuid().ToString().Substring(1, 5)}.sqlite");
+                ReadSave.CopyFile(sqlFileItem.FileInfo.FullName, cheminFichierCible);
+
                 isOpen = false;
             }
             ImGui.SameLine();
@@ -175,9 +174,8 @@ namespace SQLiteDiskExplorer.UI
                                         }
                                         ImGui.PopID();
                                         break;
-
                                     default:
-                                        Console.WriteLine("Type non géré : " + cell.GetType() + ": " + cell.ToString());
+                                        Console.WriteLine("Unhandled type: " + cell.GetType() + ": " + cell.ToString());
                                         break;
                                 }
                             }

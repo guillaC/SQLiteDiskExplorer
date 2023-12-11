@@ -20,11 +20,6 @@ namespace SQLiteDiskExplorer.UI
         {
             config = ConfigurationManager.LoadConfiguration()!;
 
-            foreach (string ze in config.ImportantKeywords)
-            {
-                Console.WriteLine(ze);
-            }
-
             foreach (var drive in pSelectedDrive)
             {
                 DrivePathsMap.Add(drive, new List<FileItem>());

@@ -6,18 +6,11 @@
         {
             try
             {
-                if (File.Exists(filePath))
-                {
-                    return File.ReadAllBytes(filePath);
-                }
-                else
-                {
-                    Console.WriteLine("Le fichier n'existe pas.");
-                }
+                return File.ReadAllBytes(filePath);
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Une erreur s'est produite : " + ex.Message);
+                Console.WriteLine("An error occurred: " + ex.Message);
             }
 
             return null;
@@ -27,15 +20,12 @@
         {
             try
             {
-                if (File.Exists(sourceFilePath))
-                {
-                    File.Copy(sourceFilePath, destinationFilePath);
-                    return true;
-                }
+                File.Copy(sourceFilePath, destinationFilePath);
+                return true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Une erreur s'est produite : " + ex.Message);
+                Console.WriteLine("An error occurred: " + ex.Message);
             }
 
             return false;
