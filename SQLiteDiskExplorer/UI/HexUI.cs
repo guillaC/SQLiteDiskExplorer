@@ -40,8 +40,8 @@ namespace SQLiteDiskExplorer.UI
 
         private void ShowActions()
         {
-            ImGui.SetCursorPosX(ImGui.GetWindowSize().X - 50);
-
+            float buttonWidth = ImGui.CalcTextSize("Exit").X + 2.0f * ImGui.GetStyle().FramePadding.X;
+            ImGui.SetCursorPosX(ImGui.GetWindowSize().X - buttonWidth - ImGui.GetStyle().ItemSpacing.X);
             if (ImGui.Button("Exit"))
             {
                 isOpen = false;

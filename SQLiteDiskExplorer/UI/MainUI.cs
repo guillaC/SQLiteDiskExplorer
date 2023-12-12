@@ -122,7 +122,8 @@ namespace SQLiteDiskExplorer.UI
 
         private void ShowActions()
         {
-            ImGui.SetCursorPosX(ImGui.GetWindowSize().X - 65);
+            float buttonWidth = ImGui.CalcTextSize("Process").X + 2.0f * ImGui.GetStyle().FramePadding.X;
+            ImGui.SetCursorPosX(ImGui.GetWindowSize().X - buttonWidth - ImGui.GetStyle().ItemSpacing.X);
             if (ImGui.Button("Process"))
             {
                 List<DriveInfo> selectedDrives = drives.Select((drive, index) => new { Drive = drive, Index = index })

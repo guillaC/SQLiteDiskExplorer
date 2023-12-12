@@ -16,9 +16,9 @@ namespace SQLiteDiskExplorer.UI
         byte[]? fileHex;
         readonly FileItem sqlFileItem;
         private SQLiteReader reader;
-
         Table? selectedTable;
         List<DataRow> dataOfSelectedTable = new();
+        bool popupIsOpen;
 
         public SQLInfoUI(FileItem sqlItem)
         {
@@ -44,7 +44,6 @@ namespace SQLiteDiskExplorer.UI
                 reader = new(sqlFileItem.FileInfo.FullName);
                 ImGui.SetWindowSize(new Vector2(650, 610));
             }
-
 
             if (ImGui.BeginTabBar("ControlTabs", ImGuiTabBarFlags.None))
             {
@@ -90,12 +89,29 @@ namespace SQLiteDiskExplorer.UI
                 string targetPath = Path.Combine($"{Environment.CurrentDirectory}/Export", $"{Path.GetFileNameWithoutExtension(sqlFileItem.FileInfo.Name)}_{DateTime.Now:yyyyMMdd_HHmmss}_{Guid.NewGuid().ToString().Substring(1, 5)}.sqlite");
                 ReadSave.CopyFile(sqlFileItem.FileInfo.FullName, targetPath);
 
-                isOpen = false;
+                popupIsOpen = true;
+                ImGui.OpenPopup("saved");
             }
+
             ImGui.SameLine();
             if (ImGui.Button("Exit"))
             {
                 isOpen = false;
+            }
+
+            if (ImGui.BeginPopupModal("saved", ref popupIsOpen, ImGuiWindowFlags.Modal | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoSavedSettings))
+            {
+                ImGui.Text($"The SQLite file has been saved in the directory:");
+                ImGui.Text($"{Environment.CurrentDirectory}/Export");
+
+                float buttonWidth = ImGui.CalcTextSize("Ok").X + 2.0f * ImGui.GetStyle().FramePadding.X;
+                ImGui.SetCursorPosX(ImGui.GetWindowSize().X - buttonWidth - ImGui.GetStyle().ItemSpacing.X);
+
+                if (ImGui.Button("Ok"))
+                {
+                    ImGui.CloseCurrentPopup();
+                }
+                ImGui.EndPopup();
             }
         }
 

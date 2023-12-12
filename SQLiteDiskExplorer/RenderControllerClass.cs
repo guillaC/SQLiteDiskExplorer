@@ -1,11 +1,30 @@
 ﻿using ClickableTransparentOverlay;
+using ImGuiNET;
 using SQLiteDiskExplorer.UI;
 using System.Drawing;
+using System.Numerics;
+using System;
+using System.Runtime.InteropServices;
 
 namespace SQLiteDiskExplorer
 {
     public class RenderControllerClass : Overlay
     {
+        [DllImport("user32.dll")]
+        public static extern IntPtr GetDesktopWindow();
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr GetDC(IntPtr hwnd);
+
+        [DllImport("user32.dll")]
+        public static extern int ReleaseDC(IntPtr hwnd, IntPtr dc);
+
+        [DllImport("gdi32.dll")]
+        public static extern int GetDeviceCaps(IntPtr hdc, int nIndex);
+
+        const int HORZRES = 8; // Horizontal Resolution
+        const int VERTRES = 10; // Vertical Resolution
+
         bool firstLoad = true;
 
         public static AboutUI? aboutForm;
@@ -17,11 +36,9 @@ namespace SQLiteDiskExplorer
 
         protected override void Render() // loop
         {
-
-            this.Size = new Size(5000, 5000);
-
             if (firstLoad)
             {
+                ResizeOverlay();
                 mainForm = new(this);
                 firstLoad = !firstLoad;
             }
@@ -33,6 +50,16 @@ namespace SQLiteDiskExplorer
             if (configForm != null) configForm.Show();
             if (infoForm != null) infoForm.Show();
             if (hexUIForm != null) hexUIForm.Show();
+        }
+
+        private void ResizeOverlay()
+        {
+            IntPtr desktopHwnd = GetDesktopWindow();
+            IntPtr desktopDC = GetDC(desktopHwnd);
+            int screenWidth = GetDeviceCaps(desktopDC, HORZRES);
+            int screenHeight = GetDeviceCaps(desktopDC, VERTRES);
+            ReleaseDC(desktopHwnd, desktopDC);
+            Size = new Size(screenWidth, screenHeight);
         }
     }
 }
