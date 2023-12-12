@@ -1,4 +1,5 @@
 ﻿using ImGuiNET;
+using SixLabors.ImageSharp;
 using SQLiteDiskExplorer.Core;
 using SQLiteDiskExplorer.Model;
 using SQLiteDiskExplorer.Model.Schema;
@@ -12,7 +13,7 @@ namespace SQLiteDiskExplorer.UI
     {
         bool firstLoad = true;
         bool isOpen = true;
-        byte[] fileHex;
+        byte[]? fileHex;
         readonly FileItem sqlFileItem;
         private SQLiteReader reader;
 
@@ -23,7 +24,7 @@ namespace SQLiteDiskExplorer.UI
         {
             try
             {
-                fileHex = ReadSave.ReadFile(sqlItem.FileInfo.FullName);
+                fileHex = ReadSave.ReadFile(filePath: sqlItem.FileInfo!.FullName!);
                 sqlFileItem = sqlItem;
             }
             catch (Exception ex)

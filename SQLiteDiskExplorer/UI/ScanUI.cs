@@ -1,4 +1,5 @@
 ﻿using ImGuiNET;
+using SixLabors.ImageSharp;
 using SQLiteDiskExplorer.Core;
 using SQLiteDiskExplorer.Model;
 using SQLiteDiskExplorer.Utils;

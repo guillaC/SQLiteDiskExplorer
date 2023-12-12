@@ -1,5 +1,6 @@
 ﻿using ClickableTransparentOverlay;
 using SQLiteDiskExplorer.UI;
+using System.Drawing;
 
 namespace SQLiteDiskExplorer
 {
@@ -16,6 +17,9 @@ namespace SQLiteDiskExplorer
 
         protected override void Render() // loop
         {
+
+            this.Size = new Size(5000, 5000);
+
             if (firstLoad)
             {
                 mainForm = new(this);

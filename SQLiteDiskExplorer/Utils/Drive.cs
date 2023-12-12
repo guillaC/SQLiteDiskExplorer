@@ -22,6 +22,8 @@
                     return "Removable Drive";
                 case DriveType.Ram:
                     return "RAM Disk";
+                case DriveType.NoRootDirectory:
+                    return "NoRootDirectory";
                 case DriveType.Unknown:
                 default:
                     return "Unknown Drive Type";

@@ -1,8 +1,6 @@
 ﻿using ImGuiNET;
-using SQLiteDiskExplorer.UI;
 using System.Numerics;
-using System.Text;
-
+using SixLabors.ImageSharp;
 
 namespace SQLiteDiskExplorer.Utils
 {
