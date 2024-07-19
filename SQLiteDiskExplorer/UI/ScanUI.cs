@@ -17,6 +17,8 @@ namespace SQLiteDiskExplorer.UI
         readonly Dictionary<DriveInfo, List<FileItem>> DrivePathsMap = new();
         readonly Dictionary<DriveInfo, SQliteScan> Workers = new();
 
+        Dictionary<string, bool> checks = new();
+
         public ScanUI(List<DriveInfo> pSelectedDrive)
         {
             config = ConfigurationManager.LoadConfiguration()!;
@@ -60,7 +62,7 @@ namespace SQLiteDiskExplorer.UI
         {
             ImGui.SeparatorText("Actions");
 
-            if (!cancelProcessing)
+            if (!cancelProcessing && Workers.Any(w => w.Value.WorkerState == SQliteScan.State.Scanning))
             {
                 if (ImGui.Button("Stop"))
                 {
@@ -69,11 +71,27 @@ namespace SQLiteDiskExplorer.UI
                 ImGui.SameLine();
             }
 
+            if (checks.Any(x => x.Value))
+            {
+                if (ImGui.Button("Export"))
+                {
+                    // Todo : Export
+                }
+            } else
+            {
+                ImGui.PushStyleVar(ImGuiStyleVar.Alpha, 0.2f);
+                ImGui.Button("Export");
+                ImGui.PopStyleVar();
+            }
+
+            ImGui.SameLine();
+
             if (ImGui.Button("Exit"))
             {
                 if (!cancelProcessing) CancelWorker();
                 isOpen = false;
             }
+
         }
 
         private void LoadResult()
@@ -114,9 +132,19 @@ namespace SQLiteDiskExplorer.UI
                             ImGui.TableSetupColumn("Size", ImGuiTableColumnFlags.NoResize, 0.07f);
                             ImGui.TableSetupColumn("Action", ImGuiTableColumnFlags.NoResize, 0.05f);
                             ImGui.TableHeadersRow();
+
                             foreach (FileItem file in info.Value)
                             {
                                 ImGui.TableNextColumn();
+                                string checkboxId = $"##Checkbox_{ImGui.TableGetRowIndex()}";
+
+                                string filePath = $"{file.FileInfo.FullName}\\{file.FileInfo.Name}";
+
+                                checks.TryGetValue(filePath, out bool value);
+                                ImGui.Checkbox(checkboxId, ref value);
+                                checks[filePath] = value;
+
+                                ImGui.SameLine();
 
                                 foreach (string keyword in config.ImportantKeywords)
                                 {
@@ -153,6 +181,7 @@ namespace SQLiteDiskExplorer.UI
 
                                 ImGui.PopID();
                                 ImGui.TableNextRow();
+
                             }
                             ImGui.EndTable();
                             ImGui.EndChild();

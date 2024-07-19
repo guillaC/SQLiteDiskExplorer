@@ -12,7 +12,7 @@ namespace SQLiteDiskExplorer.Core
         public SQLiteReader(string fileName)
         {
             Console.WriteLine($"READING {fileName}");
-            Connection = new SQLiteConnection($"Data Source={fileName}");
+            Connection = new SQLiteConnection($"Data Source={fileName};");
             LoadTableStructure();
         }
 
@@ -23,27 +23,24 @@ namespace SQLiteDiskExplorer.Core
                 Connection.Open();
                 DataTable table = Connection.GetSchema("Tables");
                 List<Table> tables = new();
-
                 foreach (DataRow row in table.Rows)
                 {
                     string tableName = row["TABLE_NAME"]?.ToString() ?? "";
                     if (!string.IsNullOrWhiteSpace(tableName))
                     {
-                        List<Column> columns = GetTableColumns(tableName);
-                        Table dbTable = new()
+                        tables.Add(new()
                         {
                             TableName = tableName,
-                            Columns = columns
-                        };
-                        tables.Add(dbTable);
+                            Columns = GetTableColumns(tableName)
+                        });
                     }
                 }
 
                 Schema.AddRange(tables);
             }
-            catch (SQLiteException ex)
+            catch (Exception ex)
             {
-                Console.WriteLine("pb " + ex.Message);
+                Console.WriteLine("LoadTableStructure: " + ex.Message);
             }
             finally
             {
@@ -53,35 +50,43 @@ namespace SQLiteDiskExplorer.Core
 
         private List<Column> GetTableColumns(string tableName)
         {
-            DataTable schemaTable = Connection.GetSchema("Columns", new[] { null, null, tableName });
             List<Column> columns = new();
 
-            foreach (DataRow schemaRow in schemaTable.Rows)
+            try
             {
-                string columnName = schemaRow["COLUMN_NAME"]?.ToString() ?? "";
-                if (string.IsNullOrWhiteSpace(columnName)) continue;
-
-                Column column = new()
+                DataTable schemaTable = Connection.GetSchema("Columns", new[] { null, null, tableName });
+                foreach (DataRow schemaRow in schemaTable.Rows)
                 {
-                    Name = columnName,
-                    DataType = schemaRow["DATA_TYPE"]?.ToString() ?? "",
-                    IsPrimary = (bool)schemaRow["PRIMARY_KEY"]
-                };
+                    string columnName = schemaRow["COLUMN_NAME"]?.ToString() ?? "";
 
-                /* TODO : relations entre les tables
-                if (schemaRow["CONSTRAINT_NAME"] != DBNull.Value && schemaRow["CONSTRAINT_TYPE"]?.ToString() == "FOREIGN KEY")
-                {
-                    ForeignKeyInfo foreignKey = new()
+                    if (string.IsNullOrWhiteSpace(columnName)) continue;
+
+                    columns.Add(new()
                     {
-                        ReferencedTable = schemaRow["FKEY_TO_TABLE"]?.ToString() ?? "",
-                        ReferencedColumn = schemaRow["FKEY_TO_COLUMN"]?.ToString() ?? ""
-                    };
+                        Name = columnName,
+                        DataType = schemaRow["DATA_TYPE"]?.ToString() ?? "",
+                        IsPrimary = schemaRow["PRIMARY_KEY"] != DBNull.Value && (bool)schemaRow["PRIMARY_KEY"]
+                    });
 
-                    column.ForeignKey = foreignKey;
+                    /* TODO : relations entre les tables
+                    if (schemaRow["CONSTRAINT_NAME"] != DBNull.Value && schemaRow["CONSTRAINT_TYPE"]?.ToString() == "FOREIGN KEY")
+                    {
+                        ForeignKeyInfo foreignKey = new()
+                        {
+                            ReferencedTable = schemaRow["FKEY_TO_TABLE"]?.ToString() ?? "",
+                            ReferencedColumn = schemaRow["FKEY_TO_COLUMN"]?.ToString() ?? ""
+                        };
+
+                        column.ForeignKey = foreignKey;
+                    }
+                    */
+
+
                 }
-                */
-
-                columns.Add(column);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"GetTableColumns({tableName}): {ex.Message}");
             }
 
             return columns;
@@ -99,8 +104,9 @@ namespace SQLiteDiskExplorer.Core
                 DataTable dataTable = new();
                 adapter.Fill(dataTable);
                 tableData.AddRange(from DataRow row in dataTable.Rows select row);
+
             }
-            catch (SQLiteException ex)
+            catch (Exception ex)
             {
                 Console.WriteLine("GetTableData: " + ex.Message);
             }

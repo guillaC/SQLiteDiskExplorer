@@ -57,26 +57,27 @@ namespace SQLiteDiskExplorer.Core
             WorkerState = State.Scanning;
 
             Console.WriteLine($"{paths.Count} files to scan");
+
             Parallel.ForEach(paths, (file, parallelLoop) =>
+            {
+                totalProcessedFiles++;
+                if (IsSQLiteFile(file))
                 {
-                    totalProcessedFiles++;
-                    if (IsSQLiteFile(file))
-                    {
-                        FileItem fItem = new(new FileInfo(file), GetHeader(file));
+                    FileItem fItem = new(new FileInfo(file), GetHeader(file));
 
-                        if (config.CheckColumnKeywordPresence) fItem.ColumnKeywordPresence = IdentifyTermInColumn(fItem);
+                    if (config.CheckColumnKeywordPresence) fItem.ColumnKeywordPresence = IdentifyTermInColumn(fItem);
 
-                        lock (lockObject)
-                        {
-                            result.Add(fItem);
-                            Console.WriteLine($"{totalNbFiles} / {totalProcessedFiles}");
-                        }
-                    }
-                    if (cancellationTkn.Token.IsCancellationRequested)
+                    lock (lockObject)
                     {
-                        parallelLoop.Break();
+                        result.Add(fItem);
+                        Console.WriteLine($"{totalNbFiles} / {totalProcessedFiles}");
                     }
-                });
+                }
+                if (cancellationTkn.Token.IsCancellationRequested)
+                {
+                    parallelLoop.Break();
+                }
+            });
 
             if (cancellationTkn.Token.IsCancellationRequested)
             {
