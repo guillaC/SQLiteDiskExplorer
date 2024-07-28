@@ -42,6 +42,8 @@ namespace SQLiteDiskExplorer.UI
             {
                 firstLoad = !firstLoad;
                 reader = new(sqlFileItem.FileInfo.FullName);
+                reader.LoadTableStructure();
+
                 ImGui.SetWindowSize(new Vector2(650, 610));
             }
 

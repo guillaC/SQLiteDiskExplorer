@@ -8,15 +8,17 @@ namespace SQLiteDiskExplorer.Core
     {
         private readonly SQLiteConnection Connection;
         public List<Table> Schema = new();
+        public byte[] Data;
+
 
         public SQLiteReader(string fileName)
         {
             Console.WriteLine($"READING {fileName}");
             Connection = new SQLiteConnection($"Data Source={fileName};");
-            LoadTableStructure();
+            
         }
 
-        private void LoadTableStructure()
+        public void LoadTableStructure()
         {
             try
             {
@@ -67,6 +69,7 @@ namespace SQLiteDiskExplorer.Core
                         DataType = schemaRow["DATA_TYPE"]?.ToString() ?? "",
                         IsPrimary = schemaRow["PRIMARY_KEY"] != DBNull.Value && (bool)schemaRow["PRIMARY_KEY"]
                     });
+
 
                     /* TODO : relations entre les tables
                     if (schemaRow["CONSTRAINT_NAME"] != DBNull.Value && schemaRow["CONSTRAINT_TYPE"]?.ToString() == "FOREIGN KEY")

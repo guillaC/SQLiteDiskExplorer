@@ -37,8 +37,8 @@ namespace SQLiteDiskExplorer.UI
             Front.HelpMarker("Stops analysis when access is denied.");
             config.CheckPathKeywordPresence = ShowCheckboxAndGetUpdatedValue(config.CheckPathKeywordPresence, "Check Keyword in File Path");
             Front.HelpMarker("Checks if any of the right words exist in a file path.\nThese files will be highlighted in reports (pink font).");
-            config.CheckColumnKeywordPresence = ShowCheckboxAndGetUpdatedValue(config.CheckColumnKeywordPresence, "Check Keyword in Columns");
-            Front.HelpMarker("Checks if any of the right words exist in any columns of SQLite files.\nThese files will be highlighted in reports (blue font).");
+            config.CheckFileKeywordPresence = ShowCheckboxAndGetUpdatedValue(config.CheckFileKeywordPresence, "Check Keyword in Files");
+            Front.HelpMarker("Checks if any of the specified keywords exist directly within the SQLite files.\nThese files will be highlighted in reports (blue font).");
             ImGui.EndGroup();
             ImGui.SameLine();
             ImGui.BeginGroup();

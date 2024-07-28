@@ -155,7 +155,7 @@ namespace SQLiteDiskExplorer.UI
                                     }
                                 }
 
-                                if (config.CheckColumnKeywordPresence && file.ColumnKeywordPresence is not null && file.ColumnKeywordPresence.Any())
+                                if (config.CheckFileKeywordPresence && file.ColumnKeywordPresence is not null && file.ColumnKeywordPresence.Any())
                                 {
                                     foreach (KeyValuePair<string, List<string>> found in file.ColumnKeywordPresence)
                                     {

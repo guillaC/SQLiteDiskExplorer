@@ -14,7 +14,7 @@ namespace SQLiteDiskExplorer.Utils
             {
                 tempConfig = new()
                 {
-                    CheckColumnKeywordPresence = true,
+                    CheckFileKeywordPresence = true,
                     CheckPathKeywordPresence = true,
                     IgnoreInaccessible = true,
                     RecurseSubdirectories = true,

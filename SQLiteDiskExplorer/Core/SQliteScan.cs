@@ -65,7 +65,7 @@ namespace SQLiteDiskExplorer.Core
                 {
                     FileItem fItem = new(new FileInfo(file), GetHeader(file));
 
-                    if (config.CheckColumnKeywordPresence) fItem.ColumnKeywordPresence = IdentifyTermInColumn(fItem);
+                    if (config.CheckFileKeywordPresence) fItem.ColumnKeywordPresence = IdentifyTermInFile(fItem);
 
                     lock (lockObject)
                     {
@@ -200,17 +200,59 @@ namespace SQLiteDiskExplorer.Core
             return new SQLiteFileHeader(header);
         }
 
+        private Dictionary<string, List<string>> IdentifyTermInFile(FileItem fItem)
+        {
+            Dictionary<string, List<string>> result = new();
+            string filePath = fItem.FileInfo.FullName;
+
+            byte[] fileContentBytes = ReadFileWithRetry(filePath);
+
+            // Convertir les octets en chaîne de caractères
+            string fileContent = System.Text.Encoding.UTF8.GetString(fileContentBytes);
+
+            foreach (var term in config.ImportantKeywords)
+            {
+                // Rechercher le terme directement dans le contenu du fichier
+                if (fileContent.Contains(term, StringComparison.OrdinalIgnoreCase))
+                {
+                    if (result.TryGetValue(term, out List<string>? value))
+                    {
+                        value.Add(filePath);
+                    }
+                    else
+                    {
+                        result[term] = new List<string>() { filePath };
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        private byte[] ReadFileWithRetry(string filePath)
+        {
+            try
+            {
+                return File.ReadAllBytes(filePath);
+            }
+            catch (IOException)
+            {
+                string tempFilePath = Path.GetTempFileName();
+                Console.WriteLine($"Copying file {filePath} to {tempFilePath}.");
+                File.Copy(filePath, tempFilePath, true);
+                byte[] fileContentBytes = File.ReadAllBytes(tempFilePath);
+                File.Delete(tempFilePath);
+                Console.WriteLine($"{tempFilePath} deleted.");
+
+                return fileContentBytes;
+            }
+        }
+
+        /*
         private Dictionary<string, List<string>> IdentifyTermInColumn(FileItem fItem)
         {
             SQLiteReader tmpReader = new(fItem.FileInfo.FullName);
             Dictionary<string, List<string>> result = new();
-
-            /*
-            foreach (var term in config.ImportantKeywords)
-            {
-                if (tmpReader.Schema.Any(table => table.Columns.Any(column => column.Name.Contains(term, StringComparison.OrdinalIgnoreCase)))) return true;
-            }
-            */
 
             foreach (var term in config.ImportantKeywords)
             {
@@ -235,5 +277,6 @@ namespace SQLiteDiskExplorer.Core
 
             return result;
         }
+        */
     }
 }

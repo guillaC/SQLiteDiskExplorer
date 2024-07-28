@@ -2,6 +2,6 @@
   "IgnoreInaccessible": true,
   "RecurseSubdirectories": true,
   "CheckPathKeywordPresence": true,
-  "CheckColumnKeywordPresence": true,
+  "CheckFileKeywordPresence": true,
   "ImportantKeywords": [ "password", "login", "key" ]
 }
