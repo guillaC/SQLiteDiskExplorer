@@ -11,7 +11,7 @@ SQLiteDiskExplorer is a tool designed to assist you in the efficient management 
   - Scan multiple drives or hard disks simultaneously.
 - **Explore SQLite Files:**
   - Easily navigate and explore SQLite files stored on disks.
-  - Configure the application to perform targeted term searches within the columns and paths of SQLite files, enabling quick data retrieval.
+  - Configure the application to perform targeted term searches within the contents of SQLite files, enabling quick data retrieval. If a file is in use by another process, the application will create a temporary copy for scanning to avoid conflicts.
 - **User-Friendly Interface:**
   - Intuitive interface that doesn't require extensive technical knowledge.
   - HexViewer
